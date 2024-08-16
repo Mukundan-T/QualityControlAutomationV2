@@ -2,7 +2,6 @@
 
 Location and Filename do not match for File: ZWU_SCA0319.B04.F02
 Location and Filename do not match for File: ZWU_SCA0319.B04.F01
-Filename: ZWU_SCA0319.B04.F01 is duplicated
 
 
 
