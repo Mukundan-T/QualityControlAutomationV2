@@ -295,7 +295,7 @@ def SheetLoop(dfs, sheets):
         if False not in sheet_success:
             createReportText(sheet, reportMajor, reportNoLocation, reportMinor)
             error_rate = round((len(reportMajor)/ (dfs[sheet].shape[0]) * 100) , 1)
-            #print(sheet + " Completed.     Error Rate: " + str(round(error_rate,1)) + "%")
+            print(sheet + " Completed.     Error Rate: " + str(round(error_rate,1)) + "%")
         else:
             break
 
@@ -314,7 +314,7 @@ def run_checks():
         filepath = get_file()
 
         dfs, sheets = get_dataFrames(filepath)
-        #print_slow("File loaded...")
+        print_slow("File loaded...")
         dfs = clean_dataFrames(dfs, sheets)
 
         #check_location_filename(dfs['Box 6'], reportMajor, reportNoLocation) test
