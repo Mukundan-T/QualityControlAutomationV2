@@ -178,7 +178,12 @@ def check_duplicate_filenames(df, reportMajor, problem_rows):
 """Coming soon
 """
 def check_date_format(df, reportMajor, problem_rows):
-
+    for index, row in df.iterrows():
+        if not pd.isna(row['date_created']):
+            try:
+                print(parse(row["date_created"]))
+            except:
+                print("Unreadable format")
     return True
 
 
@@ -286,6 +291,10 @@ def SheetLoop(dfs, sheets):
         duplicate_problem_rows = []
         sheet_success = []
 
+        check_date_format(dfs[sheet], reportMajor, reportMinor)
+
+        """
+
         success = check_location_filename(dfs[sheet], reportMajor, reportNoLocation, location_problem_rows) #First check for location/filename discrepancies
         if success:
             sheet_success.append(identify_problem_rows(sheet,location_problem_rows,"Filename", True)) #Colors the problem rows in red for location/filename problems, resets rows from previous runs of the program
@@ -298,6 +307,8 @@ def SheetLoop(dfs, sheets):
             print(sheet + " Completed.     Error Rate: " + str(round(error_rate,1)) + "%")
         else:
             break
+            
+        """
 
     if False in sheet_success:
         tk.messagebox.showerror("File error", "Save Failed. Please ensure the excel file is closed and try again")
@@ -325,7 +336,7 @@ def run_checks():
 
     ### For Debugging purposes take out try except
 
-
-# run_name_checks()    
+run_checks()    
 
 # Need to figure out a way to allow leading and trailing 0s for filenames
+
