@@ -1,16 +1,17 @@
 from dateutil.parser import parse
-import dateparser
 import datetime
 import string
 import pandas as pd
+from autocorrect import Speller
 
 def check_date_format(df, reportMajor, problem_rows):
+    spell = Speller(lang="en")
     for index, row in df.iterrows():
         #print(row['date_created'])
         if not pd.isna(row['date_created']):
             if not type(row['date_created']) is datetime.datetime:
                 try:
-                    parse(row['date_created'])
+                    parse(row['date_created'].rstrip())
                     success = True
                 except:
                     success = False
@@ -19,11 +20,13 @@ def check_date_format(df, reportMajor, problem_rows):
                     elif type(row['date_created']) is int and not success:
                         success = year_to_date(row['date_created'])
                 if not success:
-                    print(dateparser.parse(row['date_created'])) #still not working
-                    #print("Still failed date: ", row['date_created'])
+                    try:
+                        row['date_created'] = parse(spell(row['date_created']))
+                    except:
+                        print(row['date_created'], "not in good format")
 
-            else:
-                print("NaN")
+        else:
+            print("NaN")
             #if not type(row['date_created']) is datetime.datetime:
                 #print("Not datetime: ",row['date_created'])
                 #problem_rows.append(row['Filename'])
@@ -45,8 +48,6 @@ def attempt_format(df_date):
             success = True
         except:
             success = False
-    else:
-        print("Not in expeced format")
 
     return success
 
