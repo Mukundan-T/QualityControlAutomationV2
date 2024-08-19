@@ -7,11 +7,12 @@ Edited by:
 
 """
 from pypdf import PdfReader
-from dateutil.parser import parse
 import numpy as np
 import pandas as pd
 import tkinter as tk
-import time, sys, easygui, random, string, datetime, openpyxl, os
+import time, sys, easygui, random, string, openpyxl, os
+
+import Date_formatter
 
 
 """Print slow function to simulate typing
@@ -175,17 +176,6 @@ def check_duplicate_filenames(df, reportMajor, problem_rows):
             reportMajor.append("Filename: " + name +" is duplicated")
     return True
 
-"""Coming soon
-"""
-def check_date_format(df, reportMajor, problem_rows):
-    for index, row in df.iterrows():
-        if not pd.isna(row['date_created']):
-            try:
-                print(parse(row["date_created"]))
-            except:
-                print("Unreadable format")
-    return True
-
 
 """Creates the report text files containing errors
 Args:
@@ -242,7 +232,12 @@ def identify_problem_rows(sheetname, problem_rows, type, reset_rows):
 
     error_fills = {"Filename":"FFFFADB0", "Duplicate":"FFADD8E6", "DateFormat":"FFFFFFC5"}
 
-    err_fill = openpyxl.styles.PatternFill(start_color=error_fills[type], end_color=error_fills[type], fill_type="solid")
+    if type in error_fills.keys():
+        fill_hex = error_fills[type]
+    else:
+        fill_hex = type
+
+    err_fill = openpyxl.styles.PatternFill(start_color=fill_hex, end_color=fill_hex, fill_type="solid")
 
     xl_file = pd.ExcelFile(filepath)       
     dt = pd.read_excel(xl_file, sheetname)
@@ -289,11 +284,13 @@ def SheetLoop(dfs, sheets):
         reportMinor = []
         location_problem_rows = []
         duplicate_problem_rows = []
+        date_problem_rows = []
         sheet_success = []
 
-        check_date_format(dfs[sheet], reportMajor, reportMinor)
+        Date_formatter.check_date_format(dfs[sheet], reportMajor, date_problem_rows)
+        print(date_problem_rows)
 
-        """
+        """ Needs putting back in after date/time 
 
         success = check_location_filename(dfs[sheet], reportMajor, reportNoLocation, location_problem_rows) #First check for location/filename discrepancies
         if success:
