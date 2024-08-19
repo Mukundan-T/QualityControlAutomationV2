@@ -27,19 +27,6 @@ def print_slow(t):
         time.sleep(random.random()*10.0/typing_speed)
     print ('')
 
-"""Drops the uneccesary fields from the dataframe to make it easier to use
-    Can be expanded - only the fields needed by the program should be in the dataframe since we read the full df again before writing out
-Args:
-    Dict: dataframes for each sheet
-    Keys: keys for the dataframes dictionary - in this case sheet names
-Returns:
-    Dict: dataframes without the unecessary fields
-"""
-def clean_dataFrames(dfs, keys):
-    for key in keys:
-        dfs[key].drop(['documents','type','local_identifier','label (title)','creator_role','contributor_role','genre'], axis=1, inplace=True) #Can be taken out before final version, just helps to view simpler spreadsheet
-    return(dfs)
-
 
 """Resets the color of rows in the worksheet so they can be reassessed based on the progra's findings
 Args:
@@ -107,6 +94,7 @@ def identify_problem_rows(sheetname, problem_rows, type, reset_rows):
     
     return True
 
+
 """Creates the report text files containing errors
 Args:
     String: sheetName denoting which sheet is currently being worked on - Box 5, Box 6 etc.
@@ -150,11 +138,11 @@ def SheetLoop(dfs, sheets):
         date_problem_rows = []
         sheet_success = []
 
-        success = Date_formatter.check_date_format(dfs[sheet], reportMajor, date_problem_rows)
+        success, dfs[sheet] = Date_formatter.check_date_format(dfs[sheet], reportMajor, date_problem_rows) #First check for date formatting issues
 
         if success:
             sheet_success.append(identify_problem_rows(sheet, date_problem_rows, "DateFormat", True))
-            success = Location_checker.check_location_filename(dfs[sheet], reportMajor, reportNoLocation, location_problem_rows) #First check for location/filename discrepancies
+            success = Location_checker.check_location_filename(dfs[sheet], reportMajor, reportNoLocation, location_problem_rows) #Check for location/filename discrepancies
         if success:
             sheet_success.append(identify_problem_rows(sheet,location_problem_rows,"Filename", False)) #Colors the problem rows in red for location/filename problems, resets rows from previous runs of the program
             success = Location_checker.check_duplicate_filenames(dfs[sheet], reportMajor, duplicate_problem_rows) #Second check - duplicate filenames
@@ -167,10 +155,17 @@ def SheetLoop(dfs, sheets):
         else:
             break
 
+        html = dfs["Box 3 and 4"].to_html()     
+        text_file = open("index.html", "w")
+        text_file.write(html)
+        text_file.close()
+
     if False in sheet_success:
         tk.messagebox.showerror("File error", "Save Failed. Please ensure the excel file is closed and try again")
     else:
+        #Excel_reader_writer.df_to_excel(dfs, sheets, filepath)
         tk.messagebox.showinfo("Success", "Success! Please check the excel file for issues")
+
 
 
 """Begins the sheetloop that systematically checks each sheet
@@ -185,17 +180,10 @@ def run_checks():
 
         dfs, sheets = reader_writer.get_dataFrames(filepath)
         print_slow("File loaded...")
-        dfs = clean_dataFrames(dfs, sheets)
 
-        #check_location_filename(dfs['Box 6'], reportMajor, reportNoLocation) test
         SheetLoop(dfs, sheets)
     except ValueError:
         tk.messagebox.showinfo("Error", "No File was selected")
 
 
-    ### For Debugging purposes take out try except
-
-# run_checks()    
-
-# Need to figure out a way to allow leading and trailing 0s for filenames
 
