@@ -56,7 +56,7 @@ def identify_problem_rows(sheetname, problem_rows, type, reset_rows):
 
     #type will be used to determine if the passed problem rows are filename, date format etc.
 
-    error_fills = {"Filename":"FFFFADB0", "Duplicate":"FFADD8E6", "DateFormat":"FFFFFFC5"}
+    error_fills = {"Filename":"FFFFADB0", "Duplicate":"FFADD8E6", "DateFormat":"FFFDFD96"}
 
     if type in error_fills.keys():
         fill_hex = error_fills[type]
