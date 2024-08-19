@@ -9,13 +9,14 @@ Edited by:
 import pandas as pd
 import openpyxl, easygui
 
+
 """Opens an EasyGUI window to allow the user to select the file they want to parse
 Returns:
     String: filepath of the selected file
 """
 def get_file():
-    path = easygui.fileopenbox()
-    return path
+        path = easygui.fileopenbox()
+        return path
 
 
 """Uses pandas to read excel document selected by the user
@@ -32,3 +33,6 @@ def get_dataFrames(filepath):
 
     xl_file.close()
     return dfs,sheets
+
+def write_dataframes(filepath):
+    return True

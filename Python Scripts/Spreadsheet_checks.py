@@ -6,14 +6,12 @@ Authored by James Gaskell
 Edited by:
 
 """
+
 from pypdf import PdfReader
 import numpy as np
 import pandas as pd
 import tkinter as tk
-import time, sys, easygui, random, string, openpyxl, os
-
-import Date_formatter
-import Excel_reader_writer
+import time, sys, random, openpyxl, os, Date_formatter, Excel_reader_writer, Location_checker
 
 
 """Print slow function to simulate typing
@@ -29,17 +27,6 @@ def print_slow(t):
         time.sleep(random.random()*10.0/typing_speed)
     print ('')
 
-"""Removes blank spaces added to spreadsheet during data entry
-Args:
-    List: String broken up into parts
-Returns:
-    List without blank spaces
-"""
-def removeBlanks(lst):
-    while '' in lst:
-        lst.remove('')
-    return (lst)
-
 """Drops the uneccesary fields from the dataframe to make it easier to use
     Can be expanded - only the fields needed by the program should be in the dataframe since we read the full df again before writing out
 Args:
@@ -52,130 +39,6 @@ def clean_dataFrames(dfs, keys):
     for key in keys:
         dfs[key].drop(['documents','type','local_identifier','label (title)','creator_role','contributor_role','genre'], axis=1, inplace=True) #Can be taken out before final version, just helps to view simpler spreadsheet
     return(dfs)
-
-
-"""Determines the correct prefix for the files by finding the most common from the file
-    Means the script can be used for different collections
-Args:
-    List[String]: filenames used to determine most likely correct prefix
-Returns:
-    String: most likely prefix given all the entries
-"""
-def find_file_prefix(filenames):
-    filenameDict = {} #Dictionary containing the prefixes in the document and their count
-    for name in filenames:
-        prefix = name.split(".")[0]
-        if filenameDict.get(prefix) == None:
-            filenameDict[prefix] = 1
-        else:
-            filenameDict[prefix] += 1
-    return(max(filenameDict)) #Returns the most common prefix - assumes this is correct
-
-
-"""Splits the Physical location into Box, Folder and, if available, Item
-    Uses the prefix to reconstruct the filename
-    Searches the folder to locate the files by the determined filenames
-Args:
-    Dataframe: current pandas dataframe being worked on
-    Array[String]: ReportMajor containing major errors to be exported to the report
-    Array[String]: ReportNoLocation exports rows with no physical location to the Report in Minor section
-    Array[String]: Problem_rows containing the filenames that do not match so they can be highlighted and added to the text report
-Returns:
-    Boolean: Used to determine if the process was successful or not
-"""
-def check_location_filename(df, reportMajor, reportNoLocation, problem_rows):
-    locations = df[['aspace_id','Physical Location','Filename']].copy()
-    prefix = find_file_prefix(locations['Filename'])
-    for index, row in locations.iterrows():
-        if not pd.isna(row['Physical Location']):
-            Location = (row['Physical Location']).translate(str.maketrans('', '', string.punctuation))
-            Location = Location.split(" ")
-            Location = removeBlanks(Location) #Removes spaces added at the end of entries
-
-            if "Bulletin" in row['Physical Location']: #Assumes .Bull. for bulletins
-                Type = "Bull."
-            elif "Sheet" in row['Physical Location']: #Assumes .Sheet. for sheets
-                Type = "Sheet."
-            else:
-                Type = "" #Assumes no type identifier for items
-
-            detFilename = prefix
-            detFilenameNoPadding = None
-            Filename_no_suffix = None
-            if len(Location) >= 2:
-                detFilename += "."
-                if Location[0][0] == "B":
-                    detFilename += "B"
-                detFilename += Location[1].zfill(2)
-            if len(Location) >= 4:
-                detFilename += "."
-                if Location[2][0] == "F":
-                    detFilename += "F"
-                detFilename  += Location[3].zfill(2)
-            if len(Location) >= 6:
-                detFilenameNoPadding = detFilename + "." + Type + Location[5]
-                detFilename += "." + Type + Location[5].zfill(2)
-
-                # for test
-            if (len(Location) > 6) and len(Location[6]) == 1 and Location[6].isalpha():
-                try:
-                    more_characters = Location[7]
-                except IndexError:
-                    detFilename += Location[6]
-                    detFilenameNoPadding += Location[6]
-
-            if row['Filename'].rstrip()[-1].isalpha():
-                Filename_no_suffix = row['Filename'].rstrip()[:-1]
-
-            if (detFilename != row['Filename'].rstrip() and detFilenameNoPadding != row['Filename'].rstrip() and detFilename != Filename_no_suffix and detFilenameNoPadding != Filename_no_suffix):
-                reportMajor.append("Location and Filename do not match for File: " + row['Filename'])
-                problem_rows.append(row['Filename']) #Rows with major problems identified for highlighting
-        else:
-            reportNoLocation.append("No Physical Location for File: " + row['Filename'])
-
-    return True
-
-
-"""Checks for duplicate filenames in the sheet
-Args:
-    Dataframe: current pandas dataframe being worked on
-    Array[String]: ReportMajor containing duplicate filenames be exported to the report
-    Array[String]: Problem_rows containing the dulicate filenames so they can be highlighted and added to the text report
-Returns:
-    Boolean: True or False may be used to verify the process was executed successfully - not yet implemented
-"""
-def check_duplicate_filenames(df, reportMajor, problem_rows):
-    filenames = df["Filename"][df['Filename'].duplicated(keep=False)]
-    for name in filenames:
-        if name not in problem_rows:
-            problem_rows.append(name)
-            reportMajor.append("Filename: " + name +" is duplicated")
-    return True
-
-
-"""Creates the report text files containing errors
-Args:
-    String: sheetName denoting which sheet is currently being worked on - Box 5, Box 6 etc.
-    Array[String]: reportMajor containing the error messages ad filenames to be outputted in the report
-    Array[String]: reportNoLocation containing minor location errors for the report
-    Array[String]: reportMinor will be used for other errors that aren't in these categories
-"""   
-def createReportText(sheetName, reportMajor, reportNoLocation, reportMinor):
-
-    newpath = (os.path.dirname(filepath) + "\\Reports\\")
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
-
-    outputFile = open(newpath + sheetName + r" Report.txt", "w+")
-    outputFile.write("------------Major Issues------------\n\n")
-    for error in reportMajor:
-        outputFile.write(error + "\n")
-    outputFile.write("\n\n\n\n------------Minor Issues------------\n\n")
-    for error in reportNoLocation:
-        outputFile.write(error + "\n")
-    for error in reportMinor:
-        outputFile.write(error + "\n")
-    outputFile.close()
 
 
 """Resets the color of rows in the worksheet so they can be reassessed based on the progra's findings
@@ -244,8 +107,29 @@ def identify_problem_rows(sheetname, problem_rows, type, reset_rows):
     
     return True
 
-def output_df():
-    return True
+"""Creates the report text files containing errors
+Args:
+    String: sheetName denoting which sheet is currently being worked on - Box 5, Box 6 etc.
+    Array[String]: reportMajor containing the error messages ad filenames to be outputted in the report
+    Array[String]: reportNoLocation containing minor location errors for the report
+    Array[String]: reportMinor will be used for other errors that aren't in these categories
+"""   
+def createReportText(sheetName, reportMajor, reportNoLocation, reportMinor):
+
+    newpath = (os.path.dirname(filepath) + "\\Reports\\")
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)
+
+    outputFile = open(newpath + sheetName + r" Report.txt", "w+")
+    outputFile.write("------------Major Issues------------\n\n")
+    for error in reportMajor:
+        outputFile.write(error + "\n")
+    outputFile.write("\n\n\n\n------------Minor Issues------------\n\n")
+    for error in reportNoLocation:
+        outputFile.write(error + "\n")
+    for error in reportMinor:
+        outputFile.write(error + "\n")
+    outputFile.close()
 
 
 """The sheet loop that checks each sheet for errors and creates the error reports
@@ -270,10 +154,10 @@ def SheetLoop(dfs, sheets):
 
         if success:
             sheet_success.append(identify_problem_rows(sheet, date_problem_rows, "DateFormat", True))
-            success = check_location_filename(dfs[sheet], reportMajor, reportNoLocation, location_problem_rows) #First check for location/filename discrepancies
+            success = Location_checker.check_location_filename(dfs[sheet], reportMajor, reportNoLocation, location_problem_rows) #First check for location/filename discrepancies
         if success:
             sheet_success.append(identify_problem_rows(sheet,location_problem_rows,"Filename", False)) #Colors the problem rows in red for location/filename problems, resets rows from previous runs of the program
-            success = check_duplicate_filenames(dfs[sheet], reportMajor, duplicate_problem_rows) #Second check - duplicate filenames
+            success = Location_checker.check_duplicate_filenames(dfs[sheet], reportMajor, duplicate_problem_rows) #Second check - duplicate filenames
         if success:
             sheet_success.append(identify_problem_rows(sheet, duplicate_problem_rows, "Duplicate", False)) #Colors the problem rows in blue for duplicates, doesn't reset rows as it is the scond step
         if False not in sheet_success:
@@ -294,10 +178,12 @@ def SheetLoop(dfs, sheets):
 def run_checks():
     global filepath
 
-    try:
-        filepath = Excel_reader_writer.get_file()
+    reader_writer = Excel_reader_writer
 
-        dfs, sheets = Excel_reader_writer.get_dataFrames(filepath)
+    try:
+        filepath = reader_writer.get_file()
+
+        dfs, sheets = reader_writer.get_dataFrames(filepath)
         print_slow("File loaded...")
         dfs = clean_dataFrames(dfs, sheets)
 
