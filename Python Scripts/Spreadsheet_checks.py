@@ -268,6 +268,9 @@ def identify_problem_rows(sheetname, problem_rows, type, reset_rows):
     
     return True
 
+def output_df():
+    return True
+
 
 """The sheet loop that checks each sheet for errors and creates the error reports
     Contains error checking for the whole program - if any process is not successful and is unhandled an error message is produced
@@ -287,14 +290,13 @@ def SheetLoop(dfs, sheets):
         date_problem_rows = []
         sheet_success = []
 
-        Date_formatter.check_date_format(dfs[sheet], reportMajor, date_problem_rows)
-        print(date_problem_rows)
+        success = Date_formatter.check_date_format(dfs[sheet], reportMajor, date_problem_rows)
 
-        """ Needs putting back in after date/time 
-
-        success = check_location_filename(dfs[sheet], reportMajor, reportNoLocation, location_problem_rows) #First check for location/filename discrepancies
         if success:
-            sheet_success.append(identify_problem_rows(sheet,location_problem_rows,"Filename", True)) #Colors the problem rows in red for location/filename problems, resets rows from previous runs of the program
+            sheet_success.append(identify_problem_rows(sheet, date_problem_rows, "DateFormat", True))
+            success = check_location_filename(dfs[sheet], reportMajor, reportNoLocation, location_problem_rows) #First check for location/filename discrepancies
+        if success:
+            sheet_success.append(identify_problem_rows(sheet,location_problem_rows,"Filename", False)) #Colors the problem rows in red for location/filename problems, resets rows from previous runs of the program
             success = check_duplicate_filenames(dfs[sheet], reportMajor, duplicate_problem_rows) #Second check - duplicate filenames
         if success:
             sheet_success.append(identify_problem_rows(sheet, duplicate_problem_rows, "Duplicate", False)) #Colors the problem rows in blue for duplicates, doesn't reset rows as it is the scond step
@@ -304,8 +306,6 @@ def SheetLoop(dfs, sheets):
             print(sheet + " Completed.     Error Rate: " + str(round(error_rate,1)) + "%")
         else:
             break
-            
-        """
 
     if False in sheet_success:
         tk.messagebox.showerror("File error", "Save Failed. Please ensure the excel file is closed and try again")
@@ -333,7 +333,7 @@ def run_checks():
 
     ### For Debugging purposes take out try except
 
-run_checks()    
+# run_checks()    
 
 # Need to figure out a way to allow leading and trailing 0s for filenames
 

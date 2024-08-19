@@ -23,13 +23,8 @@ def check_date_format(df, reportMajor, problem_rows):
                     try:
                         row['date_created'] = parse(spell(row['date_created']))
                     except:
-                        print(row['date_created'], "not in good format")
-
-        else:
-            print("NaN")
-            #if not type(row['date_created']) is datetime.datetime:
-                #print("Not datetime: ",row['date_created'])
-                #problem_rows.append(row['Filename'])
+                        problem_rows.append(row['Filename'])
+                        reportMajor.append("The date for Filename: " + row['Filename'] + " is not in a readable format")
 
     return True
 
