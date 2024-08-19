@@ -13,6 +13,7 @@ import tkinter as tk
 import time, sys, easygui, random, string, openpyxl, os
 
 import Date_formatter
+import Excel_reader_writer
 
 
 """Print slow function to simulate typing
@@ -38,31 +39,6 @@ def removeBlanks(lst):
     while '' in lst:
         lst.remove('')
     return (lst)
-
-
-"""Opens an EasyGUI window to allow the user to select the file they want to parse
-Returns:
-    String: filepath of the selected file
-"""
-def get_file():
-    path = easygui.fileopenbox()
-    return path
-
-
-"""Uses pandas to read excel document selected by the user
-Args:
-    String: Filepath decide dby the user in the selection process
-Returns:
-    Dict: Dataframes for each sheet in the file
-    List[String]:Sheetnames in the file
-"""
-def get_dataFrames(filepath):
-    xl_file = pd.ExcelFile(filepath)
-    dfs = pd.read_excel(xl_file, sheet_name=None)
-    sheets = xl_file.sheet_names
-
-    xl_file.close()
-    return dfs,sheets
 
 """Drops the uneccesary fields from the dataframe to make it easier to use
     Can be expanded - only the fields needed by the program should be in the dataframe since we read the full df again before writing out
@@ -319,9 +295,9 @@ def run_checks():
     global filepath
 
     try:
-        filepath = get_file()
+        filepath = Excel_reader_writer.get_file()
 
-        dfs, sheets = get_dataFrames(filepath)
+        dfs, sheets = Excel_reader_writer.get_dataFrames(filepath)
         print_slow("File loaded...")
         dfs = clean_dataFrames(dfs, sheets)
 
