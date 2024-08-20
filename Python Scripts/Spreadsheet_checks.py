@@ -128,6 +128,8 @@ Args:
 """
 def SheetLoop(dfs, sheets):
 
+    errors = False
+
     for sheet in sheets:
 
         reportNoLocation = [] # These must be in this subroutine loop to prevent report data carrying over to otherr boxes
@@ -149,6 +151,8 @@ def SheetLoop(dfs, sheets):
         if success:
             sheet_success.append(identify_problem_rows(sheet, duplicate_problem_rows, "Duplicate", False)) #Colors the problem rows in blue for duplicates, doesn't reset rows as it is the scond step
         if False not in sheet_success:
+            if len(reportMajor) != 0:
+                errors = True
             createReportText(sheet, reportMajor, reportNoLocation, reportMinor)
             error_rate = round((len(reportMajor)/ (dfs[sheet].shape[0]) * 100) , 1)
             print(sheet + " Completed.     Error Rate: " + str(round(error_rate,1)) + "%")
@@ -159,8 +163,11 @@ def SheetLoop(dfs, sheets):
         tk.messagebox.showerror("File error", "Save Failed. Please ensure the excel file is closed and try again")
     else:
         Excel_reader_writer.df_to_excel(dfs, sheets, filepath)
-        tk.messagebox.showinfo("Success", "Success! Please check the excel file for issues")
-
+        if errors:
+            msg = "Success! Please check the excel file for issues"
+        else:
+            msg = "Success", "Success! There were no recorded issues. Continue to Quality Control"
+        tk.messagebox.showinfo("Success", msg)
 
 
 """Begins the sheetloop that systematically checks each sheet
