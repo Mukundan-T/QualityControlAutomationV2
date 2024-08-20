@@ -53,7 +53,9 @@ Notes:
 
 </details>
 
-#### 08-15-2024
+<details>
+
+<summary><b><u><font size="+1">08-15-2024</font></u></b></summary>
 
 Implementations:
 
@@ -75,6 +77,8 @@ Notes:
 
 * Item repeats should be allowed a character identifier (a, b, c etc.). The process must be reworked slightly so it does not have to appear in the location
 * Needs funtionality to allow for differences in input convention for 0 padding item number (i.e. .04 or .4)
+
+</details>
 
 
 
