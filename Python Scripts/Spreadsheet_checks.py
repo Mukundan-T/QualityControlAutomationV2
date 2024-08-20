@@ -155,11 +155,6 @@ def SheetLoop(dfs, sheets):
         else:
             break
 
-        html = dfs["Box 3 and 4"].to_html()     
-        text_file = open("index.html", "w")
-        text_file.write(html)
-        text_file.close()
-
     if False in sheet_success:
         tk.messagebox.showerror("File error", "Save Failed. Please ensure the excel file is closed and try again")
     else:
