@@ -12,3 +12,6 @@ Quality Control Automation for a library system. Involves data validation and au
 |Check files exist|N|
 |User Interface|In Progress|
 |User selectable error colors|N|
+
+## Design Report
+A detailed outline of the workflow for this project can be found [here](DesignReport.txt). This work diary was kept to keep others working on the project informed of my development progress.
