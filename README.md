@@ -1,5 +1,5 @@
 # QualityControlAutomation
-Quality Control Automation for a library system. Involves data validation and automated entry, with a front-end system for ease of use
+Quality Control Automation for a library system. Involves data validation and automated entry with a front-end system for ease of use, fitting into the current library workflow for digitization of historical documents. Preliminary formatting, streamlining of the QC process and post formatting will help the upload and search optimisation in Union College's ARCHES online archive.
 
 ## Objectives
 |Feature|Implemented?|
