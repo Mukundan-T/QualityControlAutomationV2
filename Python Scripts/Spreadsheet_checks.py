@@ -166,7 +166,7 @@ def SheetLoop(dfs, sheets):
         if errors:
             msg = "Success! Please check the excel file for issues"
         else:
-            msg = "Success", "Success! There were no recorded issues. Continue to Quality Control"
+            msg = "Success! There were no recorded issues. Continue to Quality Control"
         tk.messagebox.showinfo("Success", msg)
 
 

@@ -22,6 +22,56 @@ Create a program to automate aspects of the current quality control process for 
     - Any folders containing images too large should automatically fail.
 5. Date Format
     - The upload program for ARCHES only recognizes ISO format, date_created should be converted to ISO in the spreadsheet.
-    - Blanks should be ignored, any other issues should be indicated .
+    - Blanks should be ignored, any other issues should be indicated.
+
+### Work Diary and Implementations
+
+#### 08-14-2024
+
+Implementations:
+
+* Spreadsheet validation - Physical Location and Filename
+    - Some of the filenames are incorrect given the location
+    - Assumes naming conventions - Sheet, Bull, and a preceding 0 for single digits. Proceeding 0 convention could be relaxed with further implementation
+
+* Main Menu UI
+    - Asks the user to select a spreadsheet file usin file explorer simple UI package
+    - Buttons for 'Preliminary Spreadsheet Checks', 'Quality Control'
+    - Built on PyQt5 so can be improved easily and made more visually appealing with QSS
+
+Notes:
+
+* Could we create a Fragile column? Since fragile items currently are manually indicated with highlighting, preliminary checks would be able to color the spreadsheet rows in blue for fragile items
+* Use Python’s PDF reader to view x random pdf pages to automate pass/fail
+* Initial entry to fill in who the QCer is each time? Happens once at the start - current workflow uses initials to show who QC'd
+* Any changes to the naming conventions of the files. Current convention is
+    - Bull used to denote a bulletin -> ZWU_SCA0319.B06.F01.Bull.107
+    - Sheet denotes a sheet -> ZWU_SCA0319.B06.F01.Sheet.564
+    - Item has no name -> ZWU_SCA0319.B06.F05.01
+
+#### 08-15-2024
+
+Implementations:
+
+* Filename validation
+    - Now colors discrepancies between location and filename in red
+    - Ignores other colors on the spreadsheet, but removes the program's own error colors from the sheet so it can be used recursively. I.e. after errors are fixed they will return to no fill
+    - Can therefore be continually run into no color is left on the spreadsheet
+
+* Added error rate to terminal output
+    - Should be on the PyQt5 window in later versions
+* Improved GUI using PyQt5 built in styles
+* Added exception handling to ensure the file is closed before the program attempts to access anything
+* Expanded sheet naming conventions to include:
+    - Sheet &rarr; .Sheet.
+    - Bulletin &rarr; .Bull.
+    - Item &rarr; no prefix
+
+Notes:
+
+* Item repeats should be allowed a character identifier (a, b, c etc.). The process must be reworked slightly so it does not have to appear in the location
+* Needs funtionality to allow for differences in input convention for 0 padding item number (i.e. .04 or .4)
+
+
 
 
