@@ -3,4 +3,5 @@ Quality Control Automation for a library system. Involves data validation and au
 
 Objectives
 |Feature|Implemented?|
+|--------|--------|
 |Check file names against permenant locations|Yes|
