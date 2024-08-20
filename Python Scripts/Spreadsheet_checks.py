@@ -163,7 +163,7 @@ def SheetLoop(dfs, sheets):
     if False in sheet_success:
         tk.messagebox.showerror("File error", "Save Failed. Please ensure the excel file is closed and try again")
     else:
-        #Excel_reader_writer.df_to_excel(dfs, sheets, filepath)
+        Excel_reader_writer.df_to_excel(dfs, sheets, filepath)
         tk.messagebox.showinfo("Success", "Success! Please check the excel file for issues")
 
 

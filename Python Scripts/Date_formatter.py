@@ -32,6 +32,8 @@ def check_date_format(df, reportMajor, problem_rows):
                 if not success: #Last ditch effort, successful if incorrect spelling in date
                     try:
                         date = (parse(spell(row['date_created'].rstrip())))
+                        date = date.strftime("%Y-%m-%d")
+                        df.loc[index, 'date_created'] = date
                         success = True
                     except:
                         problem_rows.append(row['Filename'])

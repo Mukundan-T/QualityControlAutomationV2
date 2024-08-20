@@ -10,6 +10,7 @@ Edited by:
 import pandas as pd
 import openpyxl, easygui
 from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.styles import NamedStyle
 
 
 
@@ -44,7 +45,16 @@ def write_dataframes(dfs, sheetnames, filepath):
     xl_writer.save()
     return True
 
-def df_to_excel(df, sheetnames, filepath, header=True, index=True, startrow=0, startcol=0):
+def choose_field_format(ws, column_name):
+     match column_name:
+          case "date_created":  
+               style = NamedStyle(name='datetime', number_format='YYYY-MM-DD')
+
+     ws[column_name].style = style
+     
+     return True
+
+def df_to_excel(dfs, sheetnames, filepath):
 
     wb = openpyxl.load_workbook(filepath)  # load as openpyxl workbook; useful to keep the original layout
                                  # which is discarded in the following dataframe
@@ -53,10 +63,14 @@ def df_to_excel(df, sheetnames, filepath, header=True, index=True, startrow=0, s
          
         ws = wb[sheet]
 
-        rows = dataframe_to_rows(df, header=header, index=index)
+        for index, column_name in enumerate(list(dfs[sheet].columns.values)): #Writes the column headings to the file
+             ws.cell(1, index+1).value = column_name
 
-        for r_idx, row in enumerate(rows, startrow + 1):
-            for c_idx, value in enumerate(row, startcol + 1):
-                ws.cell(row=r_idx, column=c_idx).value = value
+        for r_idx, row in dfs[sheet].iterrows():
+             for c_idx, value in enumerate(row, 1):
+                  ws.cell(row=r_idx+2, column=c_idx).value = value
+        
+        choose_field_format(ws, "date_created")
 
     wb.save(filepath)
+    wb.close()
