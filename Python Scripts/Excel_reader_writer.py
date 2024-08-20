@@ -9,8 +9,8 @@ Edited by:
 
 import pandas as pd
 import openpyxl, easygui
-from openpyxl.utils.dataframe import dataframe_to_rows
-from openpyxl.styles import NamedStyle
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Alignment
 
 
 
@@ -46,14 +46,12 @@ def write_dataframes(dfs, sheetnames, filepath):
     return True
 
 
-def choose_field_format(ws, column_name, column_index):
-     match column_name:
-          case "date_created":  
-               style = NamedStyle(name='datetime', number_format='YYYY-MM-DD')
-
-     ws[column=].style = style
-
-     return True
+def set_field_format(ws, column_name, column_index):
+    if column_name == "date_created":
+        for cell in ws[get_column_letter(column_index+1)]:
+             cell.alignment = Alignment(horizontal='right')
+             cell.number_format = "YYY-MM-DD"
+    return True
 
 
 def df_to_excel(dfs, sheetnames, filepath):
@@ -68,11 +66,10 @@ def df_to_excel(dfs, sheetnames, filepath):
         for index, column_name in enumerate(list(dfs[sheet].columns.values)): #Writes the column headings to the file
              ws.cell(1, index+1).value = column_name
 
-             """ Used to edit date format pf column
+             
              if column_name == ("date_created"):
-                  choose_field_format(ws, "date_created", index)
+                  set_field_format(ws, "date_created", index)
 
-                  """
 
         for r_idx, row in dfs[sheet].iterrows():
              for c_idx, value in enumerate(row, 1):
