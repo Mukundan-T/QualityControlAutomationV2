@@ -6,7 +6,8 @@ Quality Control Automation for a library system. Involves data validation and au
 |--------|:--------:|
 |Check file names against permenant locations|Y|
 |Check file name duplicates|Y|
-|Date ISO formatting|In Progress|
+|Date ISO formatting|Y|
+|Dataframe change writer|Y|
 |Highlight problem cells|Y|
 |Output text report|Y|
 |Check files exist|N|
