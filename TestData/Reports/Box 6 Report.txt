@@ -1,8 +1,5 @@
 ------------Major Issues------------
 
-The date for Filename: ZWU_SCA0319.B06.F04.02 is not in a readable format
-Filename: ZWU_SCA0319.B06.F02.Bull.282 is duplicated
-Filename: ZWU_SCA0319.B06.F02.Bull.340 is duplicated
 
 
 

@@ -75,6 +75,7 @@ def check_location_filename(df, reportMajor, reportNoLocation, problem_rows):
             detFilename = prefix
             detFilenameNoPadding = None
             Filename_no_suffix = None
+            Suffix_Padding = True
             if len(Location) >= 2:
                 detFilename += "."
                 if Location[0][0] == "B":
@@ -99,8 +100,11 @@ def check_location_filename(df, reportMajor, reportNoLocation, problem_rows):
 
             if row['Filename'].rstrip()[-1].isalpha():
                 Filename_no_suffix = row['Filename'].rstrip()[:-1]
+            
+            if Filename_no_suffix == None or detFilenameNoPadding == None: #Denotes if the padding and no suffix failed so it doesnt affect the below if statement
+                Suffix_Padding = False
 
-            if (detFilename != row['Filename'].rstrip() and detFilenameNoPadding != row['Filename'].rstrip() and detFilename != Filename_no_suffix and detFilenameNoPadding != Filename_no_suffix):
+            if (detFilename != row['Filename'].rstrip() and detFilenameNoPadding != row['Filename'].rstrip() and detFilename != Filename_no_suffix and ((detFilenameNoPadding != Filename_no_suffix) or (Suffix_Padding == False))):
                 reportMajor.append("Location and Filename do not match for File: " + row['Filename'])
                 problem_rows.append(row['Filename']) #Rows with major problems identified for highlighting
         else:
