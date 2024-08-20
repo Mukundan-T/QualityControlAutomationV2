@@ -33,23 +33,23 @@ Create a program to automate aspects of the current quality control process for 
 Implementations:
 
 * Spreadsheet validation - Physical Location and Filename
-    - Some of the filenames are incorrect given the location
-    - Assumes naming conventions - Sheet, Bull, and a preceding 0 for single digits. Proceeding 0 convention could be relaxed with further implementation
+    - Some of the filenames are incorrect given the location.
+    - Assumes naming conventions - Sheet, Bull, and a preceding 0 for single digits. Proceeding 0 convention could be relaxed with further implementation.
 
 * Main Menu UI
-    - Asks the user to select a spreadsheet file usin file explorer simple UI package
-    - Buttons for 'Preliminary Spreadsheet Checks', 'Quality Control'
-    - Built on PyQt5 so can be improved easily and made more visually appealing with QSS
+    - Asks the user to select a spreadsheet file usin file explorer simple UI package.
+    - Buttons for 'Preliminary Spreadsheet Checks', 'Quality Control'.
+    - Built on PyQt5 so can be improved easily and made more visually appealing with QSS.
 
 Notes:
 
-* Could we create a Fragile column? Since fragile items currently are manually indicated with highlighting, preliminary checks would be able to color the spreadsheet rows in blue for fragile items
-* Use Python’s PDF reader to view x random pdf pages to automate pass/fail
-* Initial entry to fill in who the QCer is each time? Happens once at the start - current workflow uses initials to show who QC'd
-* Any changes to the naming conventions of the files. Current convention is
-    - Bull used to denote a bulletin -> ZWU_SCA0319.B06.F01.Bull.107
-    - Sheet denotes a sheet -> ZWU_SCA0319.B06.F01.Sheet.564
-    - Item has no name -> ZWU_SCA0319.B06.F05.01
+* Could we create a Fragile column? Since fragile items currently are manually indicated with highlighting, preliminary checks would be able to color the spreadsheet rows in blue for fragile items.
+* Use Python’s PDF reader to view x random pdf pages to automate pass/fail.
+* Initial entry to fill in who the QCer is each time? Happens once at the start - current workflow uses initials to show who QC'd.
+* Any changes to the naming conventions of the files. Current convention is:
+    - Bull used to denote a bulletin -> ZWU_SCA0319.B06.F01.Bull.107.
+    - Sheet denotes a sheet -> ZWU_SCA0319.B06.F01.Sheet.564.
+    - Item has no name -> ZWU_SCA0319.B06.F05.01.
 
 </details>
 
@@ -60,14 +60,14 @@ Notes:
 Implementations:
 
 * Filename validation
-    - Now colors discrepancies between location and filename in red
-    - Ignores other colors on the spreadsheet, but removes the program's own error colors from the sheet so it can be used recursively. I.e. after errors are fixed they will return to no fill
-    - Can therefore be continually run into no color is left on the spreadsheet
+    - Now colors discrepancies between location and filename in red.
+    - Ignores other colors on the spreadsheet, but removes the program's own error colors from the sheet so it can be used .recursively. I.e. after errors are fixed they will return to no fill.
+    - Can therefore be continually run into no color is left on the spreadsheet.
 
 * Added error rate to terminal output
-    - Should be on the PyQt5 window in later versions
-* Improved GUI using PyQt5 built in styles
-* Added exception handling to ensure the file is closed before the program attempts to access anything
+    - Should be on the PyQt5 window in later versions.
+* Improved GUI using PyQt5 built in styles.
+* Added exception handling to ensure the file is closed before the program attempts to access anything.
 * Expanded sheet naming conventions to include:
     - Sheet &rarr; .Sheet.
     - Bulletin &rarr; .Bull.
@@ -79,6 +79,46 @@ Notes:
 * Needs funtionality to allow for differences in input convention for 0 padding item number (i.e. .04 or .4)
 
 </details>
+
+<details>
+
+<summary><b><u><font size="+1">08-16-2024</font></u></b></summary>
+
+Implementations:
+
+* Duplicate Filenames.
+    - Runs after name/location error check so supersedes in importance
+    - Colors rows blue where filenames are duplicated.
+* Expanded naming conventions to allow the character after a filename which does not have to be reflected in location.
+    - Since duplicates are highlighted this allows the user to but b, c, d next to the duplicate and run the program again.
+* Modularized the color section so error type determines fill color, making it easier to add more error types in the future.
+* Changed the success check to include multiple subrocesses on each sheet (filename, duplicate, datecheck etc.).
+
+Notes:
+
+Currently working on - 
+* Date validation for date created.
+* Date ISO formatting.
+
+* Perhaps error colors should be on a palette and chosen by the user on the GUI to ensure no clashes with current spreadsheet highlighting?
+
+</details>
+
+<details>
+
+<summary><b><u><font size="+1">08-20-2024</font></u></b></summary>
+
+Implementations:
+
+* Modularized the program further to make it easier to add functionality later on. 
+    - Processes such as opening and closing files are within their own python file and have limited relience on current code.
+    - Improved the code's readability and maintainability
+* ISO date formatting
+
+
+
+</details>
+
 
 
 
