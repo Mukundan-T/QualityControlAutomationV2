@@ -26,7 +26,7 @@ Create a program to automate aspects of the current quality control process for 
 
 ### Work Diary and Implementations
 
-#### 08-14-2024
+#### <center>08-14-2024</center>
 
 Implementations:
 
@@ -49,7 +49,7 @@ Notes:
     - Sheet denotes a sheet -> ZWU_SCA0319.B06.F01.Sheet.564
     - Item has no name -> ZWU_SCA0319.B06.F05.01
 
-#### 08-15-2024
+#### <center>08-15-2024</center>
 
 Implementations:
 
