@@ -24,7 +24,7 @@ Create a program to automate aspects of the current quality control process for 
     - The upload program for ARCHES only recognizes ISO format, date_created should be converted to ISO in the spreadsheet.
     - Blanks should be ignored, any other issues should be indicated.
 
-### Work Diary and Implementations
+### Work Diary and Implementations By Date
 
 <details>
 
