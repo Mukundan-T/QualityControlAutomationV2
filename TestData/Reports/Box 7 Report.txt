@@ -1,5 +1,7 @@
 ------------Major Issues------------
 
+Location and Filename do not match for File: ZWU_SCA0319.B07.F02.24.14
+Location and Filename do not match for File: ZWU_SCA0319.B07.F07.15
 
 
 

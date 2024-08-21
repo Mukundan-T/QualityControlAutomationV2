@@ -11,7 +11,7 @@ from pypdf import PdfReader
 import numpy as np
 import pandas as pd
 import tkinter as tk
-import time, sys, random, openpyxl, os, Date_formatter, Excel_reader_writer, Location_checker
+import time, sys, random, openpyxl, os, Date_formatter, Excel_reader_writer, Location_checker, File_finder
 
 
 """Print slow function to simulate typing
@@ -175,12 +175,10 @@ def SheetLoop(dfs, sheets):
 def run_checks():
     global filepath
 
-    reader_writer = Excel_reader_writer
-
     try:
-        filepath = reader_writer.get_file()
+        filepath = File_finder.get_file()
 
-        dfs, sheets = reader_writer.get_dataFrames(filepath)
+        dfs, sheets = Excel_reader_writer.get_dataFrames(filepath)
         print_slow("File loaded...")
 
         SheetLoop(dfs, sheets)

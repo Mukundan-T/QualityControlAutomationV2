@@ -1,5 +1,16 @@
 ------------Major Issues------------
 
+Location and Filename do not match for File: ZWU_SCA0319.B05.F01.06
+Location and Filename do not match for File: ZWU_SCA0319.B05.F09.02
+Location and Filename do not match for File: ZWU_SCA0319.B05.F09.03
+Location and Filename do not match for File: ZWU_SCA0319.B05.F09.04
+Location and Filename do not match for File: ZWU_SCA0319.B05.F09.05
+Location and Filename do not match for File: ZWU_SCA0319.B05.F09.06
+Location and Filename do not match for File: ZWU_SCA0319.B05.F09.07
+Location and Filename do not match for File: ZWU_SCA0319.B05.F09.08
+Location and Filename do not match for File: ZWU_SCA0319.B05.F09.09
+Location and Filename do not match for File: ZWU_SCA0319.B05.F09.11
+Location and Filename do not match for File: ZWU_SCA0319.B05.F13.09
 
 
 

@@ -14,15 +14,6 @@ from openpyxl.styles import Alignment
 
 
 
-"""Opens an EasyGUI window to allow the user to select the file they want to parse
-Returns:
-    String: filepath of the selected file
-"""
-def get_file():
-        path = easygui.fileopenbox()
-        return path
-
-
 """Uses pandas to read excel document selected by the user
 Args:
     String: Filepath decide dby the user in the selection process

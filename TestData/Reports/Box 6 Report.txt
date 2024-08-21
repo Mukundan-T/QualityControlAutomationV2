@@ -1,5 +1,12 @@
 ------------Major Issues------------
 
+The date for Filename: ZWU_SCA0319.B06.F04.02 is not in a readable format
+Location and Filename do not match for File: ZWU_SCA0319.B06.F01.p01
+Location and Filename do not match for File: ZWU_SCA0319.B06.F02.Bull.174
+Location and Filename do not match for File: ZWU_SCA0319.B06.F02.Bull.166
+Location and Filename do not match for File: ZWU_SCA0319.B06.F02.Sheet.10
+Location and Filename do not match for File: ZWU_SCA0319.B06.F02.Bull.28
+Filename: ZWU_SCA0319.B06.F02.Bull.340 is duplicated
 
 
 
