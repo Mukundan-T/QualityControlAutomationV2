@@ -52,7 +52,7 @@ Args:
 Returns:
     Boolean: depending on wether the process was successful or not. Fails usually occur due to the excel spreadsheet being open in another application
 """
-def identify_problem_rows(sheetname, problem_rows, type, reset_rows):
+def identify_problem_rows(Spreadsheet, sheetname,  problem_rows, type, reset_rows):
 
     #type will be used to determine if the passed problem rows are filename, date format etc.
 
@@ -65,10 +65,10 @@ def identify_problem_rows(sheetname, problem_rows, type, reset_rows):
 
     err_fill = openpyxl.styles.PatternFill(start_color=fill_hex, end_color=fill_hex, fill_type="solid")
 
-    xl_file = pd.ExcelFile(filepath)       
+    xl_file = pd.ExcelFile(Spreadsheet.filepath)       
     dt = pd.read_excel(xl_file, sheetname)
 
-    wb = openpyxl.load_workbook(filepath)
+    wb = openpyxl.load_workbook(Spreadsheet.filepath)
     ws = wb[sheetname]
 
     for index, row in dt.iterrows():
@@ -83,7 +83,7 @@ def identify_problem_rows(sheetname, problem_rows, type, reset_rows):
                     ws.cell(row=index+2, column=y).fill = err_fill
     
     try: 
-        wb.save(filepath)
+        wb.save(Spreadsheet.filepath)
     except:
         wb.close()
         xl_file.close()
@@ -104,7 +104,7 @@ Args:
 """   
 def createReportText(sheetName, reportMajor, reportNoLocation, reportMinor):
 
-    newpath = (os.path.dirname(filepath) + "\\Reports\\")
+    newpath = (os.getcwd() + "\\Reports\\")
     if not os.path.exists(newpath):
         os.makedirs(newpath)
 
@@ -126,11 +126,13 @@ Args:
     Dict: dataframes - all the dataframes in the document split by sheet
     Array[String]: the names of the sheets in the document
 """
-def SheetLoop(dfs, sheets):
+def run_checks(Spreadsheet):
+
+    print_slow("File loaded...")
 
     errors = False
 
-    for sheet in sheets:
+    for sheet in Spreadsheet.sheetnames:
 
         reportNoLocation = [] # These must be in this subroutine loop to prevent report data carrying over to otherr boxes
         reportMajor = []
@@ -140,21 +142,21 @@ def SheetLoop(dfs, sheets):
         date_problem_rows = []
         sheet_success = []
 
-        success, dfs[sheet] = Date_formatter.check_date_format(dfs[sheet], reportMajor, date_problem_rows) #First check for date formatting issues
+        success, Spreadsheet.dataframes[sheet] = Date_formatter.check_date_format(Spreadsheet.dataframes[sheet], reportMajor, date_problem_rows) #First check for date formatting issues
 
         if success:
-            sheet_success.append(identify_problem_rows(sheet, date_problem_rows, "DateFormat", True))
-            success = Location_checker.check_location_filename(dfs[sheet], reportMajor, reportNoLocation, location_problem_rows) #Check for location/filename discrepancies
+            sheet_success.append(identify_problem_rows(Spreadsheet, sheet, date_problem_rows, "DateFormat", True))
+            success = Location_checker.check_location_filename(Spreadsheet.dataframes[sheet], reportMajor, reportNoLocation, location_problem_rows) #Check for location/filename discrepancies
         if success:
-            sheet_success.append(identify_problem_rows(sheet,location_problem_rows,"Filename", False)) #Colors the problem rows in red for location/filename problems, resets rows from previous runs of the program
-            success = Location_checker.check_duplicate_filenames(dfs[sheet], reportMajor, duplicate_problem_rows) #Second check - duplicate filenames
+            sheet_success.append(identify_problem_rows(Spreadsheet, sheet, location_problem_rows,"Filename", False)) #Colors the problem rows in red for location/filename problems, resets rows from previous runs of the program
+            success = Location_checker.check_duplicate_filenames(Spreadsheet.dataframes[sheet], reportMajor, duplicate_problem_rows) #Second check - duplicate filenames
         if success:
-            sheet_success.append(identify_problem_rows(sheet, duplicate_problem_rows, "Duplicate", False)) #Colors the problem rows in blue for duplicates, doesn't reset rows as it is the scond step
+            sheet_success.append(identify_problem_rows(Spreadsheet, sheet, duplicate_problem_rows, "Duplicate", False)) #Colors the problem rows in blue for duplicates, doesn't reset rows as it is the scond step
         if False not in sheet_success:
             if len(reportMajor) != 0:
                 errors = True
             createReportText(sheet, reportMajor, reportNoLocation, reportMinor)
-            error_rate = round((len(reportMajor)/ (dfs[sheet].shape[0]) * 100) , 1)
+            error_rate = round((len(reportMajor)/ (Spreadsheet.dataframes[sheet].shape[0]) * 100) , 1)
             print(sheet + " Completed.     Error Rate: " + str(round(error_rate,1)) + "%")
         else:
             break
@@ -162,28 +164,12 @@ def SheetLoop(dfs, sheets):
     if False in sheet_success:
         tk.messagebox.showerror("File error", "Save Failed. Please ensure the excel file is closed and try again")
     else:
-        Excel_reader_writer.df_to_excel(dfs, sheets, filepath)
+        Excel_reader_writer.df_to_excel(Spreadsheet.dataframes, Spreadsheet.sheetnames, Spreadsheet.filepath)
         if errors:
             msg = "Success! Please check the excel file for issues"
         else:
             msg = "Success! There were no recorded issues. Continue to Quality Control"
         tk.messagebox.showinfo("Success", msg)
-
-
-"""Begins the sheetloop that systematically checks each sheet
-"""
-def run_checks():
-    global filepath
-
-    try:
-        filepath = File_finder.get_file()
-
-        dfs, sheets = Excel_reader_writer.get_dataFrames(filepath)
-        print_slow("File loaded...")
-
-        SheetLoop(dfs, sheets)
-    except ValueError:
-        tk.messagebox.showinfo("Error", "No File was selected")
 
 
 
