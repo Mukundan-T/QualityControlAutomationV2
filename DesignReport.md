@@ -30,7 +30,7 @@ Create a program to automate aspects of the current quality control process for 
 
 <summary><b><u><font size="+1">08-14-2024</font></u></b></summary>
 
-Implementations:
+<b>Implementations:</b>
 
 * Spreadsheet validation - Physical Location and Filename
     - Some of the filenames are incorrect given the location.
@@ -41,7 +41,7 @@ Implementations:
     - Buttons for 'Preliminary Spreadsheet Checks', 'Quality Control'.
     - Built on PyQt5 so can be improved easily and made more visually appealing with QSS.
 
-Notes:
+<b>Notes:</b>
 
 * Could we create a Fragile column? Since fragile items currently are manually indicated with highlighting, preliminary checks would be able to color the spreadsheet rows in blue for fragile items.
 * Use Python’s PDF reader to view x random pdf pages to automate pass/fail.
@@ -57,7 +57,7 @@ Notes:
 
 <summary><b><u><font size="+1">08-15-2024</font></u></b></summary>
 
-Implementations:
+<b>Implementations:</b>
 
 * Filename validation
     - Now colors discrepancies between location and filename in red.
@@ -66,14 +66,17 @@ Implementations:
 
 * Added error rate to terminal output
     - Should be on the PyQt5 window in later versions.
+
 * Improved GUI using PyQt5 built in styles.
+
 * Added exception handling to ensure the file is closed before the program attempts to access anything.
+
 * Expanded sheet naming conventions to include:
     - Sheet &rarr; .Sheet.
     - Bulletin &rarr; .Bull.
     - Item &rarr; no prefix
 
-Notes:
+<b>Notes:</b>
 
 * Item repeats should be allowed a character identifier (a, b, c etc.). The process must be reworked slightly so it does not have to appear in the location
 * Needs funtionality to allow for differences in input convention for 0 padding item number (i.e. .04 or .4)
@@ -84,17 +87,20 @@ Notes:
 
 <summary><b><u><font size="+1">08-16-2024</font></u></b></summary>
 
-Implementations:
+<b>Implementations:</b>
 
 * Duplicate Filenames.
     - Runs after name/location error check so supersedes in importance
     - Colors rows blue where filenames are duplicated.
+
 * Expanded naming conventions to allow the character after a filename which does not have to be reflected in location.
     - Since duplicates are highlighted this allows the user to but b, c, d next to the duplicate and run the program again.
+
 * Modularized the color section so error type determines fill color, making it easier to add more error types in the future.
+
 * Changed the success check to include multiple subrocesses on each sheet (filename, duplicate, datecheck etc.).
 
-Notes:
+<b>Notes:</b>
 
 Currently working on - 
 * Date validation for date created.
@@ -108,13 +114,28 @@ Currently working on -
 
 <summary><b><u><font size="+1">08-20-2024</font></u></b></summary>
 
-Implementations:
+<b>Implementations:</b>
 
 * Modularized the program further to make it easier to add functionality later on. 
     - Processes such as opening and closing files are within their own python file and have limited relience on current code.
     - Improved the code's readability and maintainability
-* ISO date formatting
 
+* ISO date formatting
+    - date_created checked for datetime, then converted to ISO format
+    - date_times that are not type(datetime) go through a conversion process that includes spellcheck for written dates
+    - Dates that cannot be converted by the program are added to a list for highlighing - since we cannot be certain that the program will work on every instance it is better to let the user decide in the spreadsheet
+    - Highlights rows with date errors yellow in the spreadsheet
+
+* File_writer
+    - Can be called at any time after data is changed in the main dataframe
+    - Contains functionality to format cells - this currently sets the excel format for date_time to YYYY-MM-DD but can be used to add color or font styles to single cells
+    - Successfully writes the dataframe over the original excel file, and maintains original formatting unless otherwise specified
+
+<b>Notes:</b>
+
+* Could File_reader_writer be an object since it has an increasing number of instance variables?
+* Need to look into how we can recursively check the source folder for filenames to implement file_exists?
+* Does quality control need to be performed by sheet? If so we could add another page to the UI that uses the sheetnames of the read file to ask the user which sheet they would like to QC.
 
 
 </details>
