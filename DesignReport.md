@@ -140,6 +140,28 @@ Currently working on -
 
 </details>
 
+<details>
+
+<summary><b><u><font size="+1">08-21-2024</font></u></b></summary>
+
+<b>Implementations:</b>
+
+* Started to improve the reusability of my code by creating file and excel file objects to store data that is referred to multiple times throughout my program by different subroutines
+    1. Object File: contains Filepath, PDF_filepath, Extent, File_size and Exists.
+    2. Object Excel File: contains sheetnames, dataframes and Filepath.
+
+* Designed a singleton to contain a list of files, a spreadsheet, a dictionary of error colors and a parent directory for sharepoint. Subprocesses should wuery the singlton for file data, excel data etc.
+
+* Redesigned the User Interface on paper to make it more intuative and to understand what is needed in the singleton
+
+
+
+
+
+<b>Notes:</b>
+
+</details>
+
 
 
 
