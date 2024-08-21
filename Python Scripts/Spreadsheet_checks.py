@@ -7,11 +7,10 @@ Edited by:
 
 """
 
-from pypdf import PdfReader
 import numpy as np
 import pandas as pd
 import tkinter as tk
-import time, sys, random, openpyxl, os, Date_formatter, Excel_reader_writer, Location_checker, File_finder
+import time, sys, random, openpyxl, os, Date_formatter, Excel_reader_writer, Location_checker
 
 
 """Print slow function to simulate typing

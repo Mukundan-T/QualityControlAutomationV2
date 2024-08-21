@@ -32,12 +32,3 @@ class Program():
 
     def run_spreadsheet_checks(self):
         Spreadsheet_checks.run_checks(self.Spreadsheet)
-
-### Tests
-
-this = Program()
-this.get_excel_file()
-this.get_parent_directory()
-print("Hello world")
-    
-

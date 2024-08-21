@@ -9,7 +9,7 @@ Edited by:
 
 #import File_name_gen
 import Spreadsheet_checks
-import Quality_control
+import Singleton
 
 from File_finder import get_file
 
@@ -18,16 +18,17 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap, QPainter, QPen, QPainterPath
 from PyQt5.QtCore import Qt
 
-x
+
 class App(QWidget):
     def __init__(self):
         super().__init__()
-        self.title = 'Menu'
+        self.title = 'Quality Control Automation'
         self.left = 20
         self.top = 80
         self.width = 600
         self.height = 400
         self.setStyleSheet(qtstylish.light())
+        self.program = Singleton.Program()
         self.initUI()
   
     def initUI(self):
@@ -44,6 +45,7 @@ class App(QWidget):
 
         Find_file = QPushButton('Search', self)
         Find_file.setGeometry(480, 18, 100,25)
+        Find_file.clicked.connect(self.program.get_excel_file())
 
 
 
