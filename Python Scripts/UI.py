@@ -90,6 +90,7 @@ class App(QWidget):
 
     def runPrelimQC(self):
         self.program.get_parent_directory()
+        self.program.run_prelim_QC()
 
 
 

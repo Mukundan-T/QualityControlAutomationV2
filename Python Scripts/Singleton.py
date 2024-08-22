@@ -8,15 +8,15 @@ Edited by:
 """
 
 import Files, easygui
-import Spreadsheet_checks
+import Spreadsheet_checks, Preliminary_QC
 import tkinter as tk
 
 class Program():
 
-    Files_List = []
+    Files_List = {}
     Spreadsheet = None
     Parent_Directory = None
-    Error_Colors = {"Filename":"FFFFADB0", "Duplicate":"FFADD8E6", "DateFormat":"FFFDFD96"}
+    Error_Colors = {"Filename":"FFFFADB0", "Duplicate":"FFADD8E6", "DateFormat":"FFFDFD96", "QCFail":"FF7F7F7F"}
 
     def __init__(self):
         pass
@@ -35,6 +35,11 @@ class Program():
             Spreadsheet_checks.run_checks(self.Spreadsheet)
         else:
             tk.messagebox.showerror("Error", "No file loaded")
+
+    def run_prelim_QC(self):
+        if self.Spreadsheet != None:
+            Preliminary_QC.run_checks(self)
+
 
 
 def under_construction():

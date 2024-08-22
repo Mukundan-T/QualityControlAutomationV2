@@ -12,14 +12,14 @@ import tkinter as tk
 
 class File():
 
-    filepath = ""
+    filepath = None
     extent = None
-    max_file_size = None
+    file_size = None
+    exists = False
+    filename = None
 
-    def __init__(self, filepath, extent, max_file_size):
-        self.filepath = filepath
-        self. extent = extent
-        self.max_file_size = max_file_size
+    def __init__(self, filename):
+        self.filename = filename
 
 class ExcelFile(File):
 
