@@ -12,7 +12,7 @@ import tkinter as tk
 
 class File():
 
-    filepath = None
+    filepath = ""
     extent = None
     max_file_size = None
 

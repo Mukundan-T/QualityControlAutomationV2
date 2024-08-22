@@ -8,8 +8,8 @@ Edited by:
 """
 
 import Files, easygui
-
 import Spreadsheet_checks
+import tkinter as tk
 
 class Program():
 
@@ -31,4 +31,11 @@ class Program():
         self.Parent_Directory = path
 
     def run_spreadsheet_checks(self):
-        Spreadsheet_checks.run_checks(self.Spreadsheet)
+        if self.Spreadsheet != None:
+            Spreadsheet_checks.run_checks(self.Spreadsheet)
+        else:
+            tk.messagebox.showerror("Error", "No file loaded")
+
+
+def under_construction():
+    tk.messagebox.showerror("Error", "Under Construction")
