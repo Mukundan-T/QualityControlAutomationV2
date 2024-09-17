@@ -10,12 +10,13 @@ Quality Control Automation for a library system. Involves data validation and au
 |Dataframe change writer|Y|
 |Highlight problem cells|Y|
 |Output text report|Y|
-|Check files exist|N|
+|Check file exists|Y|
+|Check file size|Y|
+|Check file page extent|Y|
+|Auto pass/fail for tooBig/notExist|In Progress|
 |User Interface|In Progress|
 |User selectable error colors|N|
-|Check file exists|N|
-|Check file size|N|
-|Auto pass/fail for tooBig/notExist|N|
+|Front end quality control viewer|N|
 
 ## Design Report
 A detailed outline of the workflow for this project can be found [here](DesignReport.md). This work diary was kept to keep others working on the project informed of my development progress.
