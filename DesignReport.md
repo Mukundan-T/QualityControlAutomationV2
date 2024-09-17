@@ -154,15 +154,28 @@ Currently working on -
 
 * Redesigned the User Interface on paper to make it more intuative and to understand what is needed in the singleton
 
-
-
-
-
 <b>Notes:</b>
 
 </details>
 
+<details>
+
+<summary><b><u><font size="+1">09-17-2024</font></u></b></summary>
+
+<b>Implementations:</b>
+
+* Added pdf pages functionality to count the number of files in the subfolder since the individual image files are stored alongside the full pdf
+    * Added folderName to File objects to support this
+* Added functionality to identify the files that do not exist using a boolean flag
+    * Changed the print output to inform wether the file exists or not
+
+<b>Notes:</b>
+
+* Need to add an autofail by changing the Pass/Fail field in the dataframe and using ExcelReaderWriter to update the spreadsheet accordingly
+
+* Would be nice to group the widgets that do the same things together in the UI and have subwidgets to make them easier to move around
+
+* Could I add a spreadsheetExtent variable to the file pbject and compare this to the real extent of the file to determine the pass/fail?
 
 
-
-
+</details>
