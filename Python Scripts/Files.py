@@ -17,6 +17,7 @@ class File():
     file_size = None
     exists = False
     filename = None
+    parentDirectory = None
 
     def __init__(self, filename):
         self.filename = filename

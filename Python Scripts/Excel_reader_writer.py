@@ -41,7 +41,7 @@ def set_field_format(ws, column_name, column_index):
     if column_name == "date_created":
         for cell in ws[get_column_letter(column_index+1)]:
              cell.alignment = Alignment(horizontal='right')
-             cell.number_format = "YYY-MM-DD"
+             cell.number_format = "YYYY-MM-DD"
     return True
 
 

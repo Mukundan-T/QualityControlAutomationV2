@@ -55,6 +55,10 @@ class App(QWidget):
         self.File_text.resize(440, 25)
         self.File_text.setReadOnly(True) 
 
+        self.topLineWidget = QWidget(self)
+        self.topLineWidget.setFixedHeight(2)
+        self.topLineWidget.setFixedWidth(20)
+        
         self.Find_file = QPushButton('Search', self)
         self.font.setPointSize(8)
         self.Find_file.setFont(self.font)

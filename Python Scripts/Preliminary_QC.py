@@ -9,6 +9,7 @@ Edited by:
 
 import Files, glob, os
 from pathlib import Path
+from pdfreader import PDFDocument
 
 def create_possible_files(ProgramData):
     for sheet in ProgramData.Spreadsheet.sheetnames:
@@ -24,11 +25,14 @@ def file_exists(ProgramData):
         for File in ProgramData.Files_List[key]:
             for path in Path(ProgramData.Parent_Directory).rglob(File.filename + '.pdf'):
                 File.filepath = path
+                File.folderName = path.parent.absolute()
                 File.exists = True
                 File.file_size = os.path.getsize(path) >> 20
-                print(File.filename + "   Exists. PDF is " + str(File.file_size) +"MB")
+                File.extent = len(os.listdir(File.folderName)) - 1
+
+            print(File.filename + " Exists :" + str(File.exists) + ". Has " + str(File.extent) + " pages. And is " + str(File.file_size) +"MB")
     print("done")
-    
+
 def run_checks(ProgramData):
     create_possible_files(ProgramData)
     file_exists(ProgramData)
