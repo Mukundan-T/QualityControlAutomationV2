@@ -13,7 +13,8 @@ Quality Control Automation for a library system. Involves data validation and au
 |Check file exists|Y|
 |Check file size|Y|
 |Check file page extent|Y|
-|Auto pass/fail for tooBig/notExist|In Progress|
+|Auto pass/fail for tooBig/notExist|Y|
+|Auto pass/fail for incorrect extent|Y|
 |User Interface|In Progress|
 |User selectable error colors|N|
 |Front end quality control viewer|N|
