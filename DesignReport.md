@@ -179,3 +179,35 @@ Currently working on -
 
 
 </details>
+
+
+<details>
+
+<summary><b><u><font size="+1">09-18-2024</font></u></b></summary>
+
+<b>Implementations</b>
+
+* Added new datapoints to the File object for the extent and to show wether the file is too big for upload to AWS
+
+* Added auto pass/fail if:
+    - The filename cannot be located in the file structure selected by the user
+    - The extent is incorrect (user dependent since the feature only works if the extent has been inputted at the time of scanning)
+    - The file is larger than 300MB
+On current spreadsheet the automatic failure rate is roughly 37% when all of these checks are complete
+
+* Added functiuonality to output a fail message tailored to the type of failure. This way the fails can be double checked manually
+
+<b>Notes</b>
+
+* Could I add the conditional formatting rules into the program so openpyxl adds them rather than having to be done manually?
+
+* Could I add a key for the spreadsheet highlightings? This may not be necessary if I manage to fully implement the color selection
+    Current colors:
+    1. Red - Filename mismatch
+    2. Blue - Duplicate filename
+    3. Yellow - Date format error
+
+* Current goals
+    1. Improve user interface. Add lines to break up sections since there are 3 distinct parts. Maybe place buttons on subwidgets making it easier to add and take away features
+    2. Begin to work on full QC (third option on the UI)
+    3. Test the spreadsheet checks on the new spreadsheet and see how it holds up
