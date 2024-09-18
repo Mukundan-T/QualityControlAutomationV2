@@ -11,6 +11,7 @@ Edited by:
 import Singleton
 
 import sys, os, qtstylish
+import tkinter as tk
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap, QPainter, QPen, QPainterPath, QFont
 from PyQt5.QtCore import Qt
@@ -93,8 +94,11 @@ class App(QWidget):
         self.show()
 
     def runPrelimQC(self):
-        self.program.get_parent_directory()
-        self.program.run_prelim_QC()
+        if self.program.Spreadsheet != None:
+            self.program.get_parent_directory()
+            self.program.run_prelim_QC()
+        else:
+            tk.messagebox.showerror("File Error", "No Spreadsheet selected. Please search for the spreadsheet and try again")
 
 
 
