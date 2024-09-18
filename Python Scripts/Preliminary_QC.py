@@ -20,7 +20,7 @@ def create_possible_files(ProgramData):
             else:
                 ProgramData.Files_List[sheet].append(new_file)
 
-def file_exists(ProgramData):
+def file_checker(ProgramData):
     files = 0
     failures = 0
     for key in ProgramData.Files_List:
@@ -33,14 +33,26 @@ def file_exists(ProgramData):
                 File.exists = True
                 File.file_size = os.path.getsize(path) >> 20
                 File.extent = len(os.listdir(File.folderName)) - 1
+                if File.file_size > 300:
+                    File.too_large = True
 
             if not File.exists:
                 ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Pass/Fail"] = "Fail"
+                ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Comments"] = "File cannot be located"
                 print(File.filename + " Could not be located, QC: " + ProgramData.Spreadsheet.dataframes[key]["QC Pass/Fail"][Linenumber])
                 failures += 1
+            if File.too_large:
+                ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Pass/Fail"] = "Fail"
+                ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Comments"] = "File too large for upload"
+                print(File.filename + " Ttoo large for upload, QC: " + ProgramData.Spreadsheet.dataframes[key]["QC Pass/Fail"][Linenumber])
+                failures += 1
+                
             Linenumber += 1
     print("Failure rate: " + str(failures/files * 100) + "%")
 
+
+
+
 def run_checks(ProgramData):
     create_possible_files(ProgramData)
-    file_exists(ProgramData)
+    file_checker(ProgramData)
