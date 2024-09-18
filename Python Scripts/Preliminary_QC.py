@@ -21,17 +21,25 @@ def create_possible_files(ProgramData):
                 ProgramData.Files_List[sheet].append(new_file)
 
 def file_exists(ProgramData):
+    files = 0
+    failures = 0
     for key in ProgramData.Files_List:
+        Linenumber = 0
         for File in ProgramData.Files_List[key]:
-            for path in Path(ProgramData.Parent_Directory).rglob(File.filename + '.pdf'):
-                File.filepath = path
+            files += 1
+            for path in Path(ProgramData.Parent_Directory).rglob(File.filename + '.[pdf jpg]*'):
+                File.filepath = (ProgramData.Parent_Directory + "\\" + File.filename + ".pdf")
                 File.folderName = path.parent.absolute()
                 File.exists = True
                 File.file_size = os.path.getsize(path) >> 20
                 File.extent = len(os.listdir(File.folderName)) - 1
 
-            print(File.filename + " Exists :" + str(File.exists) + ". Has " + str(File.extent) + " pages. And is " + str(File.file_size) +"MB")
-    print("done")
+            if not File.exists:
+                ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Pass/Fail"] = "Fail"
+                print(File.filename + " Could not be located, QC: " + ProgramData.Spreadsheet.dataframes[key]["QC Pass/Fail"][Linenumber])
+                failures += 1
+            Linenumber += 1
+    print("Failure rate: " + str(failures/files * 100) + "%")
 
 def run_checks(ProgramData):
     create_possible_files(ProgramData)
