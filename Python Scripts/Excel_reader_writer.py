@@ -12,6 +12,13 @@ import openpyxl, easygui
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment
 
+def file_open_check(filepath):
+    xl_writer = pd.ExcelWriter("filepath", engine='openpyxl')
+    try:
+        xl_writer.save()
+        return False
+    except:
+        return True
 
 
 """Uses pandas to read excel document selected by the user
