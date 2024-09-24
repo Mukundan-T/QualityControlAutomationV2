@@ -11,6 +11,7 @@ import pandas as pd
 import openpyxl, easygui
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment
+from openpyxl.formatting.formatting import ConditionalFormattingList
 
 def file_open_check(filepath):
     wb = openpyxl.load_workbook(filepath)
@@ -52,7 +53,8 @@ def set_field_format(ws, column_name, column_index):
     return True
 
 
-def set_conditional_formatting():
+def set_conditional_formatting(ws):
+    ws.conditional_formatting = ConditionalFormattingList() #Creates newconditional formatting list. This removes all original conditional formatting
     return True
 
 
@@ -64,6 +66,8 @@ def df_to_excel(dfs, sheetnames, filepath):
     for sheet in sheetnames:
          
         ws = wb[sheet]
+
+        set_conditional_formatting(ws)
 
         for index, column_name in enumerate(list(dfs[sheet].columns.values)): #Writes the column headings to the file
              ws.cell(1, index+1).value = column_name
