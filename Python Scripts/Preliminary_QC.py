@@ -57,7 +57,7 @@ def file_checker(ProgramData):
                 ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Pass/Fail"] = "Fail"
                 ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Comments"] = "File too large for upload"
                 ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Initials"] = "AUTO"
-                # print(File.filename + " Too large for upload, QC: " + ProgramData.Spreadsheet.dataframes[key]["QC Pass/Fail"][Linenumber])
+                print(File.filename + " Too large for upload, QC: " + ProgramData.Spreadsheet.dataframes[key]["QC Pass/Fail"][Linenumber])
                 failures += 1
 
             spreadsheet_extent = ProgramData.Spreadsheet.dataframes[key]["extent (total page count including covers)"][Linenumber]
