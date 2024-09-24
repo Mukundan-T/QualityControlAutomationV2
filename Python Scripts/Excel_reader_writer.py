@@ -52,6 +52,10 @@ def set_field_format(ws, column_name, column_index):
     return True
 
 
+def set_conditional_formatting():
+    return True
+
+
 def df_to_excel(dfs, sheetnames, filepath):
 
     wb = openpyxl.load_workbook(filepath)  # load as openpyxl workbook; useful to keep the original layout
