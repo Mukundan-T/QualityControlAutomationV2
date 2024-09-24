@@ -23,7 +23,13 @@ def create_possible_files(ProgramData):
 def file_checker(ProgramData):
     files = 0
     failures = 0
+
     for key in ProgramData.Files_List:
+
+        ProgramData.Spreadsheet.dataframes[key]['QC Pass/Fail'] = ProgramData.Spreadsheet.dataframes[key]['QC Pass/Fail'].astype(str)
+        ProgramData.Spreadsheet.dataframes[key]['QC Comments'] = ProgramData.Spreadsheet.dataframes[key]['QC Comments'].astype(str)
+        ProgramData.Spreadsheet.dataframes[key]['QC Initials'] = ProgramData.Spreadsheet.dataframes[key]['QC Initials'].astype(str)
+
         Linenumber = 0
         for File in ProgramData.Files_List[key]:
             files += 1
@@ -35,6 +41,12 @@ def file_checker(ProgramData):
                 File.extent = len(os.listdir(File.folderName)) - 1
                 if File.file_size > 300:
                     File.too_large = True #Slightly redundant but better for data visualization should it be needed
+            
+            #Needs this or the script writes out Nans to the spreadsheet
+            ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Pass/Fail"] = ""
+            ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Comments"] = ""
+            ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Initials"] = ""
+            
             if not File.exists:
                 ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Pass/Fail"] = "Fail"
                 ProgramData.Spreadsheet.dataframes[key].loc[Linenumber, "QC Comments"] = "File cannot be located"

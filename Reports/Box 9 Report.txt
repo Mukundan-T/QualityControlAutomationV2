@@ -1,0 +1,10 @@
+------------Major Issues------------
+
+The date for Filename: ZWU_SCA0319.B09.F05.81 is not in a readable format
+The date for Filename: ZWU_SCA0319.B09.F08.09 is not in a readable format
+
+
+
+
+------------Minor Issues------------
+
