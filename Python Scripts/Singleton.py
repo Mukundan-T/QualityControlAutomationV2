@@ -8,7 +8,7 @@ Edited by:
 """
 
 import Files, easygui
-import Spreadsheet_checks, Preliminary_QC
+import Spreadsheet_checks, Preliminary_QC, Excel_reader_writer
 import tkinter as tk
 
 class Program():
@@ -32,13 +32,21 @@ class Program():
 
     def run_spreadsheet_checks(self):
         if self.Spreadsheet != None:
-            Spreadsheet_checks.run_checks(self.Spreadsheet)
+            File_open = Excel_reader_writer.file_open_check(self.Spreadsheet.filepath)
+            if File_open:
+                tk.messagebox.showerror("Error", "The excel file is currently open. Please close it before continuing")
+            else:
+                Spreadsheet_checks.run_checks(self.Spreadsheet)
         else:
             tk.messagebox.showerror("Error", "No file loaded")
 
     def run_prelim_QC(self):
         if self.Spreadsheet != None:
-            Preliminary_QC.run_checks(self)
+            File_open = Excel_reader_writer.file_open_check(self.Spreadsheet.filepath)
+            if File_open:
+                tk.messagebox.showerror("Error", "The excel file is currently open. Please close it before continuing")
+            else:
+                Preliminary_QC.run_checks(self)
 
 
 

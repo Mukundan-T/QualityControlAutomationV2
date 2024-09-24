@@ -27,7 +27,7 @@ def print_slow(t):
     print ('')
 
 
-"""Resets the color of rows in the worksheet so they can be reassessed based on the progra's findings
+"""Resets the color of rows in the worksheet so they can be reassessed based on the program's findings
 Args:
     worksheet: current sheet opened as part of a Workbook with the openpyxl library
     Int: i refering to the row index after opening the worksheet

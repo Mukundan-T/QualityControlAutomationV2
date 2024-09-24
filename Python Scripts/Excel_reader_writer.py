@@ -13,9 +13,10 @@ from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment
 
 def file_open_check(filepath):
-    xl_writer = pd.ExcelWriter("filepath", engine='openpyxl')
+    wb = openpyxl.load_workbook(filepath)
     try:
-        xl_writer.save()
+        wb.save(filepath)
+        wb.close()
         return False
     except:
         return True
