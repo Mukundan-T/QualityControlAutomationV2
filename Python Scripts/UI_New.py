@@ -166,6 +166,8 @@ class Ui_MainWindow(object):
         self.errorSelector = QtWidgets.QComboBox(self.colorFrame)
         self.errorSelector.setGeometry(QtCore.QRect(80, 45, 221, 21))
         self.errorSelector.setObjectName("errorSelector")
+        for error in self.program.Error_Colors.keys():
+                self.errorSelector.addItem(error)
 
         self.selectionLine = QtWidgets.QFrame(self.colorFrame)
         self.selectionLine.setGeometry(QtCore.QRect(50, 54, 21, 2))
