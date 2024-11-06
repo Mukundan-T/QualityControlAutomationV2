@@ -168,6 +168,7 @@ class Ui_MainWindow(object):
         self.errorSelector.setObjectName("errorSelector")
         for error in self.program.Error_Colors.keys():
                 self.errorSelector.addItem(error)
+        # self.errorSelector.activated.connect(self.updateColor)
 
         self.selectionLine = QtWidgets.QFrame(self.colorFrame)
         self.selectionLine.setGeometry(QtCore.QRect(50, 54, 21, 2))
@@ -211,9 +212,6 @@ class Ui_MainWindow(object):
         self.Search.setObjectName("Search")
         self.Search.clicked.connect(self.updateTextbox)
 
-
-
-
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -240,18 +238,19 @@ class Ui_MainWindow(object):
         self.Search.setText(_translate("MainWindow", "Search"))
 
 
-    def updateTextbox(self):
+def updateTextbox(self):
         self.program.get_excel_file()
         if self.program.Spreadsheet.filepath != None:
-            text = self.program.Spreadsheet.filepath
-        self.fileInput.setText(text)
+                text = self.program.Spreadsheet.filepath
+                self.fileInput.setText(text)
+
 
 def runPrelimQC(self):
         if self.program.Spreadsheet != None:
-            self.program.get_parent_directory()
-            self.program.run_prelim_QC()
+                self.program.get_parent_directory()
+                self.program.run_prelim_QC()
         else:
-            tk.messagebox.showerror("File Error", "No Spreadsheet selected. Please search for the spreadsheet and try again")
+                tk.messagebox.showerror("File Error", "No Spreadsheet selected. Please search for the spreadsheet and try again")
 
 
 if __name__ == "__main__":

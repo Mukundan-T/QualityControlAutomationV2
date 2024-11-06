@@ -1,0 +1,9 @@
+autocorrect==2.6.1
+pandas==2.2.2
+python-dateutil==2.8.2
+openpyxl==3.1.2
+easygui==0.98.3
+PyQt5==5.15.11
+numpy==2.0.1
+pandas==2.2.2
+regex==2024.7.24

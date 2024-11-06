@@ -9,7 +9,6 @@ Edited by:
 
 import Files, glob, os, Excel_reader_writer, re
 from pathlib import Path
-from pdfreader import PDFDocument
 
 def create_possible_files(ProgramData):
     for sheet in ProgramData.Spreadsheet.sheetnames:
