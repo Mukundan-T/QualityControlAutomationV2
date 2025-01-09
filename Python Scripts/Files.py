@@ -12,11 +12,12 @@ import tkinter as tk
 
 class File():
 
+    exists = False
+    errors = None
     filepath = None
     extent = None
     file_size = None
     too_large = None
-    exists = False
     filename = None
     parentDirectory = None
 

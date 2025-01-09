@@ -1,12 +1,3 @@
-"""
-Authored by James Gaskell
-
-08/14/2024
-
-Edited by:
-
-"""
-
 #import File_name_gen
 import Singleton
 
@@ -110,4 +101,3 @@ def main():
     sys.exit(app.exec_())
 
 main()
-        

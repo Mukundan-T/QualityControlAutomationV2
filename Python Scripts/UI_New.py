@@ -210,7 +210,7 @@ class Ui_MainWindow(object):
 "border-color: rgb(0, 0, 0);\n"
 "padding: 1px;")
         self.Search.setObjectName("Search")
-        self.Search.clicked.connect(self.updateTextbox)
+        #self.Search.clicked.connect(self.updateTextbox)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -236,21 +236,6 @@ class Ui_MainWindow(object):
         self.colorSelectorHeader.setText(_translate("MainWindow", "Color Selector"))
         self.colorDisplay.setToolTip(_translate("MainWindow", "<html><head/><body><p>Click here to select a new color for this error</p></body></html>"))
         self.Search.setText(_translate("MainWindow", "Search"))
-
-
-def updateTextbox(self):
-        self.program.get_excel_file()
-        if self.program.Spreadsheet.filepath != None:
-                text = self.program.Spreadsheet.filepath
-                self.fileInput.setText(text)
-
-
-def runPrelimQC(self):
-        if self.program.Spreadsheet != None:
-                self.program.get_parent_directory()
-                self.program.run_prelim_QC()
-        else:
-                tk.messagebox.showerror("File Error", "No Spreadsheet selected. Please search for the spreadsheet and try again")
 
 
 if __name__ == "__main__":
