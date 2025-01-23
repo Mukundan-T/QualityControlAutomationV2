@@ -211,3 +211,7 @@ On current spreadsheet the automatic failure rate is roughly 37% when all of the
     1. Improve user interface. Add lines to break up sections since there are 3 distinct parts. Maybe place buttons on subwidgets making it easier to add and take away features
     2. Begin to work on full QC (third option on the UI)
     3. Test the spreadsheet checks on the new spreadsheet and see how it holds up
+
+
+### Refactoring to Object Oriented
+

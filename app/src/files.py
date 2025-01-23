@@ -7,43 +7,25 @@ Edited by:
 
 """
 from typing import List
-import openpyxl
 import pandas as pd
 
 class ScanFile():
-
-    fileName = None 
-    # Real filename read in from spreadsheet
-    location = None 
-    # This will be used to construct the expected filename
-    date = None
-    # Stores the date for format checking
-    exists = False
-    # Results of searching for the file
-    filePath = None 
-    # Only populates if exists is true
-    errors = None 
-    # Used to track date errors, filename errors etc.
-    extent = 0
-    # Allows comparison between real extent and spreadsheet recorded extent
-    too_large = False
-    # If the file size is > 200Mb (subject to change)
 
     def __init__(self, filename, loc, date, pages):
         self.fileName = filename
         self.location = loc
         self.date = date
+        self.exists = False
+        self.filePath = None 
         self.extent = pages
+        self.errors = {'Date': False, 'Filename': False, 'DupFilename': False}
+        self.too_large = too_large = False
 
 class ExcelSheet():
 
-    sheetName = None
-    # the name of the sheet in the spreadsheet - used as a unique identifier
-    fileList: List[ScanFile] = list()
-    # List of files on that sheet
-
     def __init__(self, sheetname):
         self.sheetName = sheetname
+        self.fileList: List[ScanFile] = list()
 
     def createScanFileList(self, df):
         for index, row in df.iterrows():
@@ -51,19 +33,12 @@ class ExcelSheet():
             self.fileList.append(record)
 
 
-
-
 class ExcelFile():
-
-    filePath = None
-    # Filepath of the spreadsheet chosen in UI
-    sheetList: List[ExcelSheet] = list()
-    # List of sheet objects in the spreadsheet
-    dataFrames = None
-    # Pandas dataframe containing all of the spreadsheet data for each record
 
     def __init__(self, filepath):
         self.filePath = filepath
+        self.sheetList: List[ExcelSheet] = list()
+        self.dataFrames = None
 
 
     def setFilePath(self, newpath):

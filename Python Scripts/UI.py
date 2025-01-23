@@ -1,7 +1,7 @@
 #import File_name_gen
 import Singleton
 
-import sys, os, qtstylish
+import sys, os
 import tkinter as tk
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap, QPainter, QPen, QPainterPath, QFont
@@ -16,7 +16,6 @@ class App(QWidget):
         self.top = 80
         self.width = 600
         self.height = 360
-        self.setStyleSheet(qtstylish.light())
         self.program = Singleton.Program()
         self.initUI()
   
