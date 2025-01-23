@@ -1,0 +1,113 @@
+------------Major Issues------------
+
+The date for Filename: ZWU_SCA0319.B03.F08.Bull.Index101.147 is not in a readable format
+Location and Filename do not match for File: ZWU_SCA0319.B03.F11.C01
+Location and Filename do not match for File: ZWU_SCA0319.B04.F02
+Location and Filename do not match for File: ZWU_SCA0319.B04.F01
+
+
+
+
+------------Minor Issues------------
+
+No Physical Location for File: ZWU_SCA0319.B03.F01
+No Physical Location for File: ZWU_SCA0319.B03.F02.1891
+No Physical Location for File: ZWU_SCA0319.B03.F02.1893
+No Physical Location for File: ZWU_SCA0319.B03.F03
+No Physical Location for File: ZWU_SCA0319.B03.F04
+No Physical Location for File: ZWU_SCA0319.B03.F05
+No Physical Location for File: ZWU_SCA0319.B03.F06
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.100
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.101
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.102
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.103
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.104
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.105
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.106
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.107
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.108
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.109
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.110A
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.112
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.113
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.114
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.115
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.116
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.117
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.119
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.119.02
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.120
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.121
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.122
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.123
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.124
+No Physical Location for File: ZWU_SCA0319.B03.F07.Cir.125
+No Physical Location for File: ZWU_SCA0319.B03.F07.Cir.126
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.127
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.129
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.130
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.131
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.132
+No Physical Location for File: ZWU_SCA0319.B03.F07.Cir.AL
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.133
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.134
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.135
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.136
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.137
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.138
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.139
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.140
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.141
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.142
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.143
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.145
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.146
+No Physical Location for File: ZWU_SCA0319.B03.F07.Bull.147
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.01
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.02
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.03
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.04
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.05
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.06
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.07
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.08
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.09
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.10
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.11
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.12
+No Physical Location for File: ZWU_SCA0319.B03.F07.EngBull.13
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.148
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.149
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.287
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.025
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.037
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.145
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.361
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.611
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.613
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.413
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.607
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.030
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.031
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.088
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.614
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.604
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.618
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.603
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.608
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.259
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.606
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.249
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.609
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.602
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.612
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.615
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.601
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.265
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.605
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.042
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.087
+No Physical Location for File: ZWU_SCA0319.B03.F08.Bull.Index101.147
+No Physical Location for File: ZWU_SCA0319.B03.F08.BlackBull.23
+No Physical Location for File: ZWU_SCA0319.B03.F09.C01
+No Physical Location for File: ZWU_SCA0319.B03.F10.C01
