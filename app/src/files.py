@@ -65,6 +65,15 @@ class ExcelFile():
     def setFilePath(self, newpath):
         self.filePath = newpath
         self.sheetList: List[ExcelSheet] = list()
+
+    def getTotalError(self):
+        return sum([sheet.errors for sheet in self.sheetList])
+    
+    def getTotalFailures(self):
+        return sum([sheet.failures for sheet in self.sheetList])
+    
+    def getTotalFiles(self):
+        return sum([len(sheet.fileList) for sheet in self.sheetList])
     
     """Creates the file structure of an excel file creating each sheet and adding it to the sheetlist
         Method calls sheet.createScanFileList to create the list of files from the sheet dataframe

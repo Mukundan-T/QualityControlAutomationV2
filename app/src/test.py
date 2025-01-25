@@ -28,10 +28,17 @@ for file in spreadsheet.sheetList[sheet_num].fileList:
     if file.errors['Filename'] == True:
         bad_filenames +=1
 
-print("found "+ str(date) + " date errors")
-print("found "+ str(dups) + " duplicate filename errors")
-print("found " + str(bad_filenames) + " filename errors")
+#print("found "+ str(date) + " date errors")
+#print("found "+ str(dups) + " duplicate filename errors")
+#print("found " + str(bad_filenames) + " filename errors")
 
-print("found " + str(spreadsheet.sheetList[sheet_num].errors) + " errors in total")
+#print("found " + str(spreadsheet.sheetList[sheet_num].errors) + " errors in total")
+
+total_errors = spreadsheet.getTotalError()
+print("total errors accross all sheets: " + str(total_errors))
+total_failures = spreadsheet.getTotalFailures()
+print("total failures accross all sheets: " + str(total_failures)) 
+total_files = spreadsheet.getTotalFiles()
+print("total files accross all sheets: " + str(total_files))
 
 
