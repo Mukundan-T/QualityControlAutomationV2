@@ -32,6 +32,8 @@ class ExcelSheet():
 
     def __init__(self, sheetname):
         self.sheetName = sheetname
+        self.errors = 0
+        self.failures = 0
         self.fileList: List[ScanFile] = list()
 
     """Creates a list of ScanFile objects from the dataframe"""
@@ -78,5 +80,9 @@ class ExcelFile():
                 [sheet.createScanFileList(self.dataFrames[sheet.sheetName]) for sheet in self.sheetList] #Creates the list of files from the sheet dataframe
         except Exception as error:
             return error
-        
-                
+    
+    """Is this the best place to put this method?
+        Uses the file object structure to update the dataframes with the failures and errors
+    """
+    def updateDataFrames(self):
+        pass
