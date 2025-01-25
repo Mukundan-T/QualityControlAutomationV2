@@ -10,15 +10,15 @@ spreadsheet.createFileStructure()
 #print(spreadsheet.sheetList)
 #print(spreadsheet.sheetList[0].fileList)
 
-spreadsheetChecks.check_date_format(spreadsheet.sheetList[1].fileList)
-spreadsheetChecks.check_duplicate_filenames(spreadsheet.sheetList[1].fileList)
-file_prefix = spreadsheetChecks.find_file_prefix(spreadsheet.sheetList[1].fileList)
-spreadsheetChecks.check_location_filename(spreadsheet.sheetList[1].fileList)
+spreadsheetChecks.check_date_format(spreadsheet.sheetList[0].fileList)
+spreadsheetChecks.check_duplicate_filenames(spreadsheet.sheetList[0].fileList)
+file_prefix = spreadsheetChecks.find_file_prefix(spreadsheet.sheetList[0].fileList)
+spreadsheetChecks.check_location_filename(spreadsheet.sheetList[0].fileList)
 
 date = 0
 dups = 0
 bad_filenames = 0
-for file in spreadsheet.sheetList[1].fileList:
+for file in spreadsheet.sheetList[0].fileList:
     if file.errors['Date'] == True:
         print(file.date)
         date +=1

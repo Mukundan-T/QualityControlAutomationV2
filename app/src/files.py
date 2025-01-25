@@ -15,17 +15,15 @@ class ScanFile():
         self.fileName = filename
         self.location = loc
         self.date = date
+        self.filePath = None
         self.exists = False
-        self.filePath = None 
-        self.extent = pages
+        self.extent = pages # This is the extent read from the spreadsheet - not the actual extent
         self.errors = {'Date': False,
                        'Filename': False,
                        'DupFilename': False,
                        'Extent': False,
                        'Existance': False,
                        'Filesize': False}
-        self.too_large = False
-        self.comments = None
 
 
 
