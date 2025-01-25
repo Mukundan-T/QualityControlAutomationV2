@@ -9,11 +9,11 @@ Edited by:
 import os, glob, re
 from pathlib import Path
 
-def check_files(file_list, parent_directory):
+def check_files(sheet, parent_directory):
 
     failures = 0
 
-    for file in file_list:
+    for file in sheet.fileList:
         for path in Path(parent_directory).rglob(file.fileName + '.[pdf jpg]*'):
 
             file.filePath = (parent_directory + "\\" + file.fileName + ".pdf") # Can I do this using path above?
@@ -21,13 +21,14 @@ def check_files(file_list, parent_directory):
 
             file.exists = True
 
-            file.errors['Extent'] = True if os.path.getsize(file.filePath) >> 20 else False
+            # We perhaps can't assume this is correct since some don't have parent folders
+            file.errors['Extent'] = False if file.extent == len(os.listdir(path.parent.absolute())) - 1 else True
 
-            # We can't assume this is correct since some don't have parent folders
-            file.extent = len(os.listdir(path.parent.absolute())) - 1
+            # 
+            file.errors['Filesize'] = False if (os.path.getsize(file.filePath) >> 20) < 300 else True
         
         if not file.exists:
             file.errors['Existance'] = True
             failures += 1
 
-    return (failures/len(file_list) * 100) # Return percentage of failures
+    sheet.failures = failures # Add number of failures to the sheet object

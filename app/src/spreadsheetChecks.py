@@ -51,13 +51,14 @@ def attempt_format(date):
 
 """Checks the date format and attempts to format the date if in unexpected form
 Args:
-    files_list: list of file objects from excel sheet
+    fileList: list of file objects from excel sheet
 Returns:
     Boolean: True to verify the process was executed successfully
 """
-def check_date_format(files_list):
+def check_date_format(sheet):
+
     spell = Speller(lang="en")
-    for file in files_list:
+    for file in sheet.fileList:
         success = False
         if file.date != None:
             if not type(file.date) is datetime.datetime:
@@ -77,6 +78,7 @@ def check_date_format(files_list):
                             success = True
                         except:
                             file.errors['Date'] = True
+                            sheet.errors += 1
                     else:
                         file.date = date.strftime("%Y-%m-%d")
             else:
@@ -86,13 +88,14 @@ def check_date_format(files_list):
 
 """Checks for duplicate filenames in the list of files
 Args:
-    files_list: list of file objects from excel sheet
+    fileList: list of file objects from excel sheet
 """
-def check_duplicate_filenames(files_list):
-    for file in files_list:
-        for comp_file in files_list:
+def check_duplicate_filenames(sheet):
+    for file in sheet.fileList:
+        for comp_file in sheet.fileList:
             if file.fileName == comp_file.fileName and file != comp_file:
                 file.errors['DupFilename'] = True
+                sheet.errors += 1
 
 
 """Determines the correct prefix for the files by finding the most common from the file
@@ -102,9 +105,9 @@ Args:
 Returns:
     String: most likely prefix given all the entries
 """
-def find_file_prefix(files_list):
+def find_file_prefix(fileList):
     filenameDict = {} #Dictionary containing the prefixes in the document and their count
-    for file in files_list:
+    for file in fileList:
         try: #ignore any funky filenames
             prefix = file.fileName.split('.')[0]
             if filenameDict.get(prefix) == None:
@@ -116,9 +119,9 @@ def find_file_prefix(files_list):
             pass
 
 
-def check_location_filename(files_list):
-    prefix = find_file_prefix(files_list)
-    for file in files_list:
+def check_location_filename(sheet):
+    prefix = find_file_prefix(sheet.fileList)
+    for file in sheet.fileList:
         pred_filename = prefix
         if not file.location == None:
 
@@ -144,3 +147,4 @@ def check_location_filename(files_list):
 
             if pred_filename != file.fileName:
                 file.errors['Filename'] = True
+                sheet.errors += 1
