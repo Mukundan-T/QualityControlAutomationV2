@@ -36,6 +36,9 @@ class ExcelSheet():
         self.failures = 0
         self.fileList: List[ScanFile] = list()
 
+    def getErrorRate(self):
+        return self.errors / len(self.fileList)
+
     """Creates a list of ScanFile objects from the dataframe"""
     def createScanFileList(self, df):
         for _, row in df.iterrows():
