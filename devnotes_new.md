@@ -10,4 +10,12 @@
         + If we could make this a dictionary of its own then it becomes more efficient to reference dictionary keys
         + nested dictionary? - split the method into a sheet error getter, use this with an excelfile to make a dictionary of sheets with a dictionary of errors inside?
         - Adds complexity to the objects
-    2. We could 
+
+* Added a lot of getter methods to the object structure. At the end we need to look through these and decide which are necessary and which aren't. We can probably do this by just ctrl-f for calls to thee functions.
+
+* Still looking like we maintain the following order:
+    1. Update dataframes with auto fails
+    2. Output to the excel file using openpyxl
+    3. Clear the colors that are hard programmed so we can run the program in a recursive process
+    4. Apply color formatting to errors
+    5. Close file

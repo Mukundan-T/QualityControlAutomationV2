@@ -21,6 +21,8 @@ input_filename = 'sample.xlsx'
 # Accounting fot the differences in file structure between Mac and Windows
 # Can be expanded for more operating systems.
 # Currently works on Mac and windows - other functions may break if the program is ported to a different OS
+# Needs calling by the main class or method to populate the PLATFORM constant
+# This constant can then be used where there are interactions with the file structure
 
 plat = platform.platform()
 
