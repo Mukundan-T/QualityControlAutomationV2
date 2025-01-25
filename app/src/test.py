@@ -6,19 +6,20 @@ file = DEFAULT_INPUT_FILE
 spreadsheet = files.ExcelFile(DEFAULT_INPUT_FILE)
 spreadsheet.createFileStructure()
 
+sheet_num = 0
+
 #print(spreadsheet)
 #print(spreadsheet.sheetList)
 #print(spreadsheet.sheetList[0].fileList)
 
-spreadsheetChecks.check_date_format(spreadsheet.sheetList[0].fileList)
-spreadsheetChecks.check_duplicate_filenames(spreadsheet.sheetList[0].fileList)
-file_prefix = spreadsheetChecks.find_file_prefix(spreadsheet.sheetList[0].fileList)
-spreadsheetChecks.check_location_filename(spreadsheet.sheetList[0].fileList)
+spreadsheetChecks.check_date_format(spreadsheet.sheetList[sheet_num])
+spreadsheetChecks.check_duplicate_filenames(spreadsheet.sheetList[sheet_num])
+spreadsheetChecks.check_location_filename(spreadsheet.sheetList[sheet_num])
 
 date = 0
 dups = 0
 bad_filenames = 0
-for file in spreadsheet.sheetList[0].fileList:
+for file in spreadsheet.sheetList[sheet_num].fileList:
     if file.errors['Date'] == True:
         print(file.date)
         date +=1
@@ -29,8 +30,8 @@ for file in spreadsheet.sheetList[0].fileList:
 
 print("found "+ str(date) + " date errors")
 print("found "+ str(dups) + " duplicate filename errors")
-#print("file prefix is: " + file_prefix)
-
 print("found " + str(bad_filenames) + " filename errors")
+
+print("found " + str(spreadsheet.sheetList[sheet_num].errors) + " errors in total")
 
 
