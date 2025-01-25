@@ -6,7 +6,6 @@ Authored by James Gaskell
 Edited by:
 
 """
-
 from typing import List
 import pandas as pd
 
@@ -19,8 +18,17 @@ class ScanFile():
         self.exists = False
         self.filePath = None 
         self.extent = pages
-        self.errors = {'Date': False, 'Filename': False, 'DupFilename': False}
+        self.errors = {'Date': False,
+                       'Filename': False,
+                       'DupFilename': False,
+                       'Extent': False,
+                       'Existance': False,
+                       'Filesize': False}
         self.too_large = False
+        self.comments = None
+
+
+
 
 class ExcelSheet():
 
@@ -37,6 +45,9 @@ class ExcelSheet():
                             row['extent (total page count including covers)'])
             
             self.fileList.append(record)
+
+
+
 
 
 class ExcelFile():
