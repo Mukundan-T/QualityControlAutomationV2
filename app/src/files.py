@@ -29,7 +29,7 @@ class ScanFile():
         # Extent
         # Filesize
         # Existance
-        
+
         self.errors = {'Date': False,
                        'Filename': False,
                        'DupFilename': False,
@@ -125,3 +125,18 @@ class ExcelFile():
     """
     def getFileErrorDict(self):
         return {sheet.sheetName: sheet.getSheetErrorDict() for sheet in self.sheetList}
+    
+    """Method to add auto fail comments to the correct cells in the spreadsheet
+        Updates the QC Results, QC Comments, QC initials columns depending on fail types"""
+    def updateDataFrames(self):
+        for sheet in self.sheetList:
+            sheetDict = sheet.getSheetErrorDict()
+            for key in sheetDict:
+                self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Results'] = 'Fail'
+                self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC initials'] = 'AUTO'
+                if sheetDict[key] == 'Extent':
+                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'Incorrect page count'
+                if sheetDict[key] == 'Filesize':
+                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'Filesize too large'
+                if sheetDict[key] == 'Existance':
+                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'File does not exist'
