@@ -6,7 +6,6 @@ Authored by James Gaskell
 Edited by:
 
 """
-
 from autocorrect import Speller
 from dateutil.parser import parse
 import datetime, string

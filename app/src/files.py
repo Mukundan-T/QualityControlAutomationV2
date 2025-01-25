@@ -29,7 +29,6 @@ class ScanFile():
         # Extent
         # Filesize
         # Existance
-
         self.errors = {'Date': False,
                        'Filename': False,
                        'DupFilename': False,
@@ -81,6 +80,8 @@ class ExcelSheet():
 
 class ExcelFile():
 
+    errorColors = {"Filename":"FFFFADB0", "Duplicate":"FFADD8E6", "DateFormat":"FFFDFD96", "QCFail":"FF7F7F7F"} # This is outside the __init__ method so it is shared between all instances of the class
+
     def __init__(self, filepath):
         self.filePath = filepath
         self.sheetList: List[ExcelSheet] = list()
@@ -104,9 +105,13 @@ class ExcelFile():
     def getTotalFiles(self):
         return sum([len(sheet.fileList) for sheet in self.sheetList])
     
+    def setErrorColor(self, errorType, newColor):
+        self.errorColors[errorType] = newColor
+    
     """Creates the file structure of an excel file creating each sheet and adding it to the sheetlist
         Method calls sheet.createScanFileList to create the list of files from the sheet dataframe
     """
+    # It might be a better design decision to put this in FileHandler but this works for now
     def createFileStructure(self):
         try:
             if self.filePath == None:
@@ -128,15 +133,20 @@ class ExcelFile():
     
     """Method to add auto fail comments to the correct cells in the spreadsheet
         Updates the QC Results, QC Comments, QC initials columns depending on fail types"""
+    # Can't test until I can access the onedrive file structure
     def updateDataFrames(self):
         for sheet in self.sheetList:
             sheetDict = sheet.getSheetErrorDict()
             for key in sheetDict:
-                self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Results'] = 'Fail'
-                self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC initials'] = 'AUTO'
-                if sheetDict[key] == 'Extent':
-                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'Incorrect page count'
-                if sheetDict[key] == 'Filesize':
-                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'Filesize too large'
+                # Order matters here - if an error is matched in the order; Existance, Filesize, Extent then the others are ignored
+                # This means the failures go in order of precedence
+                # A file may fail for more than one of these reasons, only the mopst important reason is recorded
+                if key in ['Extent', 'Filesize', 'Existance']:
+                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Results'] = 'Fail'
+                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC initials'] = 'AUTO'
                 if sheetDict[key] == 'Existance':
                     self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'File does not exist'
+                elif sheetDict[key] == 'Filesize':
+                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'Filesize too large'
+                elif sheetDict[key] == 'Extent':
+                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'Incorrect page count'

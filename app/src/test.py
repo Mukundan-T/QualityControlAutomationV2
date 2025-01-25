@@ -79,3 +79,7 @@ print("total failures accross all sheets: " + str(total_failures))
 
 print("error rate: " + str(total_errors/spreadsheet.getTotalFiles() * 100))
 print("failure rate: " + str(total_failures/spreadsheet.getTotalFiles() * 100))
+
+spreadsheet.updateDataFrames()
+
+print("")

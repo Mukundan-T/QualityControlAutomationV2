@@ -12,6 +12,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment
 from openpyxl.formatting.formatting import ConditionalFormattingList
 
+
 """Openpyxl does not have permission to edit an open file
     This function checks if the file is open in an editor so an exception can be raised
 Args:
@@ -28,6 +29,7 @@ def file_open_check(filepath):
     except:
         return True
     
+
 """Currently used to set date format to the correct ISO
     Can be expanded to include formatting options for other fields
 Args:
@@ -35,7 +37,6 @@ Args:
     column_name: the name of the column
     column_index: the index of the column
 """
-    
 def set_field_format(ws, column_name, column_index):
     if column_name == "date_created":
         for cell in ws[get_column_letter(column_index+1)]:
@@ -43,29 +44,25 @@ def set_field_format(ws, column_name, column_index):
              cell.number_format = "YYYY-MM-DD"
 
 
-# Can we keep this method mostly the same? 
-# We don't currently store sheetnames in the object structure - does it make sense to just pass in the whole file object?
-# If we do it this way, df_to_excel could call out color method
-def df_to_excel(dfs, sheetnames, filepath):
+# Test this
+# Can we call row highlighter from this method?
+# ^^ Shouldn't do it this way because sheet not written to for spreadsheetChecks only PreliminaryQC
+def write_excelfile(ExcelFile):
+    wb = openpyxl.load_workbook(ExcelFile.filePath)
 
-    wb = openpyxl.load_workbook(filepath)  # load as openpyxl workbook; useful to keep the original layout
-                                 # which is discarded in the following dataframe
-    
-    for sheet in sheetnames:
-         
-        ws = wb[sheet]
-        for index, column_name in enumerate(list(dfs[sheet].columns.values)): #Writes the column headings to the file
-             ws.cell(1, index+1).value = column_name
+    for sheet in ExcelFile.sheetList:
+        ws = wb[sheet.sheetName]
 
-             # This is where we call the field formatter
-             # Any expansion to formatter requires an additional call here
-             if column_name == ("date_created"):
-                  set_field_format(ws, "date_created", index)
+        for index, column_name in enumerate(list(ExcelFile.dataFrames[sheet.sheetName].columns.values)):
+            ws.cell(1, index+1).value = column_name
 
+            # This is where we call the field formatter
+            # Any expansion to formatter requires an additional call here
+            if column_name == ("date_created"):
+                set_field_format(ws, "date_created", index)
 
-        for r_idx, row in dfs[sheet].iterrows():
-             for c_idx, value in enumerate(row, 1):
-                  ws.cell(row=r_idx+2, column=c_idx).value = value
-
-    wb.save(filepath)
+        for r_idx, row in sheet.dataFrame.iterrows():
+            for c_idx, value in enumerate(row, 1):
+                ws.cell(row=r_idx+2, column=c_idx).value = value
+    wb.save(ExcelFile.filePath)
     wb.close()

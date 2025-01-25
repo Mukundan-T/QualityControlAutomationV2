@@ -19,3 +19,7 @@
     3. Clear the colors that are hard programmed so we can run the program in a recursive process
     4. Apply color formatting to errors
     5. Close file
+
+* Does the singleton class need to be in the same file as the UI to prevent circular imports?
+    * Ui should be able to both get and set the filepath
+    * UI should have access to the single instance of ExcelFile
