@@ -42,7 +42,7 @@ def attempt_format(date):
             date_new = date[:-2] + '01'
     
         try:
-            date_new = parse(date)
+            date_new = parse(date_new)
             return [True, date_new]
         except:
             return [False, date]
@@ -59,27 +59,28 @@ def check_date_format(files_list):
     spell = Speller(lang="en")
     for file in files_list:
         success = False
-        if not type(file.date) is datetime.datetime:
-            try:
-                date = (parse(file.date.rstrip()))
-                success = True
-            except:
-                if type(file.date) is str and not success:
-                    success, date = attempt_format((file.date))
-                elif type(file.date) is int and not success:
-                    success, date = year_to_date((file.date))
-                if not success: #Last ditch effort, successful if incorrect spelling in date
-                    try:
-                        date = (parse(spell(file.date.rstrip())))
-                        date = date.strftime("%Y-%m-%d")
-                        file.date = date
-                        success = True
-                    except:
-                        file.errors['Date'] = True
-                else:
-                    file.date = date.strftime("%Y-%m-%d")
-        else:
-            file.date = file.date.strftime("%Y-%m-%d")
+        if file.date != None:
+            if not type(file.date) is datetime.datetime:
+                try:
+                    date = (parse(file.date.rstrip()))
+                    success = True
+                except:
+                    if type(file.date) is str and not success:
+                        success, date = attempt_format((file.date))
+                    elif type(file.date) is int and not success:
+                        success, date = year_to_date((file.date))
+                    if not success: #Last ditch effort, successful if incorrect spelling in date
+                        try:
+                            date = (parse(spell(file.date.rstrip())))
+                            date = date.strftime("%Y-%m-%d")
+                            file.date = date
+                            success = True
+                        except:
+                            file.errors['Date'] = True
+                    else:
+                        file.date = date.strftime("%Y-%m-%d")
+            else:
+                file.date = file.date.strftime("%Y-%m-%d")
     return True
 
 
@@ -124,7 +125,11 @@ def check_location_filename(files_list):
             #Does this filter work? I think so...
             Location = list(filter(None, file.location.translate(str.maketrans('', '', string.punctuation)).split(" ")))
 
-            file.fileName = file.fileName.replace(" ", "") #Removes any spaces that shouldn't be in the filename
+            #ignore any funky filenames
+            try:
+                file.fileName = file.fileName.replace(" ", "") #Removes any spaces that shouldn't be in the filename
+            except:
+                pass
 
             if "Box" in Location:
                 pred_filename += ".B" + Location[1].zfill(2)
