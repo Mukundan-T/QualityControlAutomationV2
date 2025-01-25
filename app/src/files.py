@@ -18,12 +18,24 @@ class ScanFile():
         self.filePath = None
         self.exists = False
         self.extent = pages # This is the extent read from the spreadsheet - not the actual extent
+
+        # The order of these is important for the error returns
+        # The file is failed or highlighted based on the last error that matches
+        # The dictionary must go in descending order of importance
+        # Order:
+        # Date
+        # Filename
+        # DupFilename
+        # Extent
+        # Filesize
+        # Existance
+        
         self.errors = {'Date': False,
                        'Filename': False,
                        'DupFilename': False,
                        'Extent': False,
-                       'Existance': False,
-                       'Filesize': False}
+                       'Filesize': False,
+                       'Existance': False}
 
 
 
@@ -38,6 +50,9 @@ class ExcelSheet():
 
     def getErrorRate(self):
         return self.errors / len(self.fileList)
+    
+    def getFailureRate(self):
+        return self.failures / len(self.fileList)
 
     """Creates a list of ScanFile objects from the dataframe"""
     def createScanFileList(self, df):
@@ -49,6 +64,17 @@ class ExcelSheet():
             
             self.fileList.append(record)
 
+    """Supplies a dictionary of the errors in the sheet so the errors can be highlighted using openpyxl
+    Returns:
+        Dict: Dictionary of the errors in the sheet
+    """
+    def getSheetErrorDict(self):
+        errorDict = {}
+        for file in self.fileList:
+            for key in file.errors:
+                if file.errors[key]:
+                    errorDict[file.fileName] = key
+        return errorDict
 
 
 
@@ -93,8 +119,9 @@ class ExcelFile():
         except Exception as error:
             return error
     
-    """Is this the best place to put this method?
-        Uses the file object structure to update the dataframes with the failures and errors
+    """Supplies a dictionary of sheets with the errors nested inside
+    Returns:
+        Dict: Dictionary of the errors in the file
     """
-    def updateDataFrames(self):
-        pass
+    def getFileErrorDict(self):
+        return {sheet.sheetName: sheet.getSheetErrorDict() for sheet in self.sheetList}
