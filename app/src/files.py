@@ -6,6 +6,7 @@ Authored by James Gaskell
 Edited by:
 
 """
+
 from typing import List
 import pandas as pd
 
@@ -19,7 +20,7 @@ class ScanFile():
         self.filePath = None 
         self.extent = pages
         self.errors = {'Date': False, 'Filename': False, 'DupFilename': False}
-        self.too_large = too_large = False
+        self.too_large = False
 
 class ExcelSheet():
 
@@ -27,8 +28,9 @@ class ExcelSheet():
         self.sheetName = sheetname
         self.fileList: List[ScanFile] = list()
 
+    """Creates a list of ScanFile objects from the dataframe"""
     def createScanFileList(self, df):
-        for index, row in df.iterrows():
+        for _, row in df.iterrows():
             record = ScanFile(row['Filename'],
                             row['Physical Location'],
                             row['date_created'] if not pd.isna(row['date_created']) else None,
@@ -44,18 +46,18 @@ class ExcelFile():
         self.sheetList: List[ExcelSheet] = list()
         self.dataFrames = None
 
-
-    def setFilePath(self, newpath):
-        """
-        Allows the user to change the spreadsheet in the UI without creating a new object instance
+    """Allows the user to change the spreadsheet in the UI without creating a new object instance
         Clears the old sheet list, which in turn clearsthe file storage
-
-        Args:
-            newpath (str): the new filepath selected
-        """
+    Args:
+        newpath (str): the new filepath selected
+    """
+    def setFilePath(self, newpath):
         self.filePath = newpath
         self.sheetList: List[ExcelSheet] = list()
     
+    """Creates the file structure of an excel file creating each sheet and adding it to the sheetlist
+        Method calls sheet.createScanFileList to create the list of files from the sheet dataframe
+    """
     def createFileStructure(self):
         try:
             if self.filePath == None:
