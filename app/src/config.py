@@ -1,3 +1,12 @@
+"""
+Authored by James Gaskell
+
+11/06/2024
+
+Edited by:
+
+"""
+
 import os
 import platform
 

@@ -29,7 +29,11 @@ class ExcelSheet():
 
     def createScanFileList(self, df):
         for index, row in df.iterrows():
-            record = ScanFile(row['Filename'], row['Physical Location'], row['date_created'], row['extent (total page count including covers)'])
+            record = ScanFile(row['Filename'],
+                            row['Physical Location'],
+                            row['date_created'] if not pd.isna(row['date_created']) else None,
+                            row['extent (total page count including covers)'])
+            
             self.fileList.append(record)
 
 

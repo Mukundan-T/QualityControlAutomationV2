@@ -11,11 +11,26 @@ spreadsheet.createFileStructure()
 #print(spreadsheet.sheetList[0].fileList)
 
 spreadsheetChecks.check_date_format(spreadsheet.sheetList[1].fileList)
+spreadsheetChecks.check_duplicate_filenames(spreadsheet.sheetList[1].fileList)
+file_prefix = spreadsheetChecks.find_file_prefix(spreadsheet.sheetList[1].fileList)
+spreadsheetChecks.check_location_filename(spreadsheet.sheetList[1].fileList)
 
-found = 0
+date = 0
+dups = 0
+bad_filenames = 0
 for file in spreadsheet.sheetList[1].fileList:
     if file.errors['Date'] == True:
         print(file.date)
-        found +=1
+        date +=1
+    if file.errors['DupFilename'] == True:
+        dups +=1
+    if file.errors['Filename'] == True:
+        bad_filenames +=1
 
-print("found "+ str(found) + " errors")
+print("found "+ str(date) + " date errors")
+print("found "+ str(dups) + " duplicate filename errors")
+#print("file prefix is: " + file_prefix)
+
+print("found " + str(bad_filenames) + " filename errors")
+
+
