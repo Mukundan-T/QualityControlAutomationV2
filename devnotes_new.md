@@ -23,3 +23,13 @@
 * Does the singleton class need to be in the same file as the UI to prevent circular imports?
     * Ui should be able to both get and set the filepath
     * UI should have access to the single instance of ExcelFile
+
+* Broadly speaking would it be a good idea to extract the fails into another metadata spreadsheet? This could make the QC process more recursive.
+    1. Scan
+    2. Conduct checks
+    3. Generate new, shorter spreadsheet with just fails
+    4. Back to step 1
+
+    Could be interesting to add this functionality - would definitely make the fails a little clearer for the person that has to go through and itentify records to sort out
+
+* Should we split the failures and the errors into separate dictionaries inside the excel file/sheet objects? The prelimQC and spreadsheetChecks are supposedly independent of one another so this would reduce complexity when run on their own. Less errors to check through for each item.
