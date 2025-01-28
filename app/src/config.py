@@ -32,4 +32,5 @@ if "macOS" in plat:
 elif 'Windows' in plat:
     PLATFORM = 'windows'
     DEFAULT_INPUT_FILE = os.path.join(MAINROOT, 'spreadsheets\\'+ input_filename)
+    DEFAULT_ONEDRIVE_FOLDER = "C:\\Users\\libstudent.UNION\\OneDrive - Union College\\SCA-0319 William Stanley Jr"
 

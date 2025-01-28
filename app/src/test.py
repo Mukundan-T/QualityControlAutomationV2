@@ -1,5 +1,5 @@
-from config import DEFAULT_INPUT_FILE
-import files, spreadsheetChecks, fileHandler
+from config import DEFAULT_INPUT_FILE, DEFAULT_ONEDRIVE_FOLDER
+import files, spreadsheetChecks, preliminaryQC, fileHandler
 
 file = DEFAULT_INPUT_FILE
 
@@ -54,6 +54,7 @@ for sheet in spreadsheet.sheetList:
     spreadsheetChecks.check_date_format(sheet)
     spreadsheetChecks.check_duplicate_filenames(sheet)
     spreadsheetChecks.check_location_filename(sheet)
+    preliminaryQC.check_files(sheet, DEFAULT_ONEDRIVE_FOLDER)
 
     date = 0
     dups = 0
@@ -82,7 +83,8 @@ print("failure rate: " + str(total_failures/spreadsheet.getTotalFiles() * 100))
 
 spreadsheet.updateDataFrames()
 
-fileHandler.highlight_errors(spreadsheet)
+fileHandler.write_excelfile(spreadsheet)
+#fileHandler.highlight_errors(spreadsheet)
 
 
 print("")

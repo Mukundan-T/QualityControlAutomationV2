@@ -8,6 +8,7 @@ Edited by:
 """
 from typing import List
 import pandas as pd
+import re
 
 class ScanFile():
 
@@ -56,10 +57,11 @@ class ExcelSheet():
     """Creates a list of ScanFile objects from the dataframe"""
     def createScanFileList(self, df):
         for _, row in df.iterrows():
-            record = ScanFile(row['Filename'],
+            spreadsheet_extent = int(re.findall(r'\d+', row['extent (total page count including covers)'])[0])
+            record = ScanFile(str(row['Filename']),
                             row['Physical Location'],
                             row['date_created'] if not pd.isna(row['date_created']) else None,
-                            row['extent (total page count including covers)'])
+                            spreadsheet_extent if not pd.isna(row['extent (total page count including covers)']) else None)
             
             self.fileList.append(record)
 
@@ -142,10 +144,14 @@ class ExcelFile():
         for sheet in self.sheetList:
             sheetDict = sheet.getSheetErrorDict()
             for key in sheetDict:
+
+                self.dataFrames['QC Pass/Fail'] = self.dataFrames['QC Pass/Fail'].astype(str)
+                self.dataFrames['QC Comments'] = self.dataFrames['QC Comments'].astype(str)
+                self.dataFrames['QC Initials'] = self.dataFrames['QC Initials'].astype(str)
                 # Order matters here - if an error is matched in the order; Existance, Filesize, Extent then the others are ignored
                 # This means the failures go in order of precedence
                 # A file may fail for more than one of these reasons, only the mopst important reason is recorded
-                if key in ['Extent', 'Filesize', 'Existance']:
+                if sheetDict[key] in ['Extent', 'Filesize', 'Existance']:
                     self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Results'] = 'Fail'
                     self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC initials'] = 'AUTO'
                 if sheetDict[key] == 'Existance':

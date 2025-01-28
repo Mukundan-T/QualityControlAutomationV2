@@ -14,18 +14,22 @@ def check_files(sheet, parent_directory):
     failures = 0
 
     for file in sheet.fileList:
-        for path in Path(parent_directory).rglob(file.fileName + '.[pdf jpg]*'):
+        try:
+            for path in Path(parent_directory).rglob(file.fileName + '.[pdf jpg]*'):
 
-            file.filePath = (parent_directory + "\\" + file.fileName + ".pdf") # Can I do this using path above?
-            # We can't assume this will be a pdf as single pages stored as jpg
+                file.filePath = (parent_directory + "\\" + file.fileName + ".pdf") # Can I do this using path above?
+                # We can't assume this will be a pdf as single pages stored as jpg
 
-            file.exists = True
+                file.exists = True
 
-            # We perhaps can't assume this is correct since some don't have parent folders
-            file.errors['Extent'] = False if file.extent == len(os.listdir(path.parent.absolute())) - 1 else True
+                # We perhaps can't assume this is correct since some don't have parent folders
+                file.errors['Extent'] = False if file.extent == len(os.listdir(path.parent.absolute())) - 1 or file.extent == None else True
 
-            # 
-            file.errors['Filesize'] = False if (os.path.getsize(file.filePath) >> 20) < 300 else True
+                # 
+                file.errors['Filesize'] = False if (os.path.getsize(file.filePath) >> 20) < 300 else True
+
+        except:
+            pass
         
         if not file.exists:
             file.errors['Existance'] = True
