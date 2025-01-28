@@ -1,5 +1,5 @@
 from config import DEFAULT_INPUT_FILE
-import files, spreadsheetChecks
+import files, spreadsheetChecks, fileHandler
 
 file = DEFAULT_INPUT_FILE
 
@@ -81,5 +81,8 @@ print("error rate: " + str(total_errors/spreadsheet.getTotalFiles() * 100))
 print("failure rate: " + str(total_failures/spreadsheet.getTotalFiles() * 100))
 
 spreadsheet.updateDataFrames()
+
+fileHandler.highlight_errors(spreadsheet)
+
 
 print("")

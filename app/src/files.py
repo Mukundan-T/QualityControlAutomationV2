@@ -80,7 +80,8 @@ class ExcelSheet():
 
 class ExcelFile():
 
-    errorColors = {"Filename":"FFFFADB0", "Duplicate":"FFADD8E6", "DateFormat":"FFFDFD96", "QCFail":"FF7F7F7F"} # This is outside the __init__ method so it is shared between all instances of the class
+    errorColors = {"Filename":"FFFFADB0", "Duplicate":"FFADD8E6", "DateFormat":"FFFDFD96"} # This is outside the __init__ method so it is shared between all instances of the class
+    failColors = {"QCFail":"FF7F7F7F"} #Done this way to allow expansion of the fail types
 
     def __init__(self, filepath):
         self.filePath = filepath
@@ -107,6 +108,9 @@ class ExcelFile():
     
     def setErrorColor(self, errorType, newColor):
         self.errorColors[errorType] = newColor
+
+    def setFailColor(self, newColor):
+        self.failColor = newColor
     
     """Creates the file structure of an excel file creating each sheet and adding it to the sheetlist
         Method calls sheet.createScanFileList to create the list of files from the sheet dataframe
