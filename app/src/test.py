@@ -1,9 +1,16 @@
 from config import DEFAULT_INPUT_FILE, DEFAULT_ONEDRIVE_FOLDER
 import files, spreadsheetChecks, preliminaryQC, fileHandler
+from tkinter import messagebox
 
 file = DEFAULT_INPUT_FILE
 
+file_open = fileHandler.file_open_check(DEFAULT_INPUT_FILE) #No point in doing any analysis unless spreadsheet is closed at the start
+while file_open:
+    messagebox.showerror("Error", "The excel file is open in editor. Please close it and try again")
+    file_open = fileHandler.file_open_check(DEFAULT_INPUT_FILE)
+
 spreadsheet = files.ExcelFile(DEFAULT_INPUT_FILE)
+
 spreadsheet.createFileStructure()
 
 sheet_num = 0
@@ -83,8 +90,11 @@ print("failure rate: " + str(total_failures/spreadsheet.getTotalFiles() * 100))
 
 spreadsheet.updateDataFrames()
 
-fileHandler.write_excelfile(spreadsheet)
-#fileHandler.highlight_errors(spreadsheet)
+success = fileHandler.write_excelfile(spreadsheet)
+if success:
+    success = fileHandler.highlight_errors(spreadsheet)
+else:
+    messagebox.showerror("Error","The excel file is open in editor so changes could not be saved")
 
 
-print("")
+print("Success")
