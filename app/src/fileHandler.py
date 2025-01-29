@@ -36,7 +36,7 @@ def reset_colors(ExcelFile, wb, colors_to_remove):
         ws = wb[sheet.sheetName]
         for row in ws.iter_rows():
             for cell in row:
-                if cell.fill in colors_to_remove.values():
+                if cell.fill.start_color.index in colors_to_remove.values():
                     cell.fill = fill_reset
 
 
@@ -51,31 +51,37 @@ def highlight_errors(ExcelFile):
         dt = pd.read_excel(xl_file, sheet.sheetName)
         ws = wb[sheet.sheetName]
 
-        for file in sheet.getSheetErrorDict():
-            error_color = None
+        errors = sheet.getSheetErrorDict()
+        errors.update(sheet.getSheetFailureDict())
+
+        colors = ExcelFile.errorColors
+        colors.update (ExcelFile.failColors)
+
+        for file in errors:
+            error_color = colors[errors[file]]
+            """
             try:
-                if file.errors['DupFilename']:
+                if errors[file] == DupFilename
                     error_color = ExcelFile.errorColors['Duplicate']
                 elif file.errors['Filename']:
                     error_color = ExcelFile.errorColors['Filename']
                 elif file.errors['Date']:
                     error_color = ExcelFile.errorColors['DateFormat']
             except:
-                error_color = ExcelFile.errorColors['Filename'] # If try fails to an exception we know fileName is likely Nan
-                
+                error_color = ExcelFile.errorColors['Filename'] # If try fails to an exception we know fileName is likely Nan or incorrect format
+            """
             if error_color != None:
                  fill = openpyxl.styles.PatternFill(start_color=error_color, end_color=error_color, fill_type="solid")
                  for index, row in dt.iterrows():
                     try:
-                        if file.fileName == dt['Filename'][index]:
+                        if file == dt['Filename'][index]:
                             for y in range(1, ws.max_column+1):
                                 ws.cell(row=index+2, column=y).fill = fill
                     except:
                         pass
-    
 
     try: 
-        wb.save(ExcelFile.filepath)
+        wb.save(ExcelFile.filePath)
         wb.close()
         xl_file.close()
         return True

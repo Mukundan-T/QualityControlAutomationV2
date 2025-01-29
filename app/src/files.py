@@ -32,10 +32,13 @@ class ScanFile():
         # Existance
         self.errors = {'Date': False,
                        'Filename': False,
-                       'DupFilename': False,
-                       'Extent': False,
-                       'Filesize': False,
-                       'Existance': False}
+                       'DupFilename': False}
+        
+        self.failures = {
+                        'Extent': False,
+                        'Filesize': False,
+                        'Existance': False}
+    
 
 
 
@@ -57,11 +60,14 @@ class ExcelSheet():
     """Creates a list of ScanFile objects from the dataframe"""
     def createScanFileList(self, df):
         for _, row in df.iterrows():
-            spreadsheet_extent = int(re.findall(r'\d+', row['extent (total page count including covers)'])[0])
+            try:
+                spreadsheet_extent = int(re.findall(r'\d+', row['extent (total page count including covers)'])[0])
+            except:
+                spreadsheet_extent = None
             record = ScanFile(row['Filename'],
                             row['Physical Location'],
                             row['date_created'] if not pd.isna(row['date_created']) else None,
-                            spreadsheet_extent if not pd.isna(row['extent (total page count including covers)']) else None)
+                            spreadsheet_extent)
             
             self.fileList.append(record)
 
@@ -76,14 +82,22 @@ class ExcelSheet():
                 if file.errors[key]:
                     errorDict[file.fileName] = key
         return errorDict
-
+    
+    def getSheetFailureDict(self):
+        failureDict ={}
+        for file in self.fileList:
+            for key in file.failures:
+                if file.failures[key]:
+                    failureDict[file.fileName] = key
+        return failureDict
+    
 
 
 
 class ExcelFile():
 
-    errorColors = {"Filename":"FFFFADB0", "Duplicate":"FFADD8E6", "DateFormat":"FFFDFD96"} # This is outside the __init__ method so it is shared between all instances of the class
-    failColors = {"QCFail":"FF7F7F7F"} #Done this way to allow expansion of the fail types
+    errorColors = {"Filename":"FFD291BC", "DupFilename":"FFADD8E6", "Date":"FFFDFD96"} # This is outside the __init__ method so it is shared between all instances of the class
+    failColors = {"Extent":"FFFFADB0", "Filesize":"FFFFADB0", "Existance":"FFFFADB0"} #Done this way to allow expansion of the fail types
 
     def __init__(self, filepath):
         self.filePath = filepath
@@ -137,6 +151,7 @@ class ExcelFile():
     """
     def getFileErrorDict(self):
         return {sheet.sheetName: sheet.getSheetErrorDict() for sheet in self.sheetList}
+    
     
     """Method to add auto fail comments to the correct cells in the spreadsheet
         Updates the QC Results, QC Comments, QC initials columns depending on fail types"""

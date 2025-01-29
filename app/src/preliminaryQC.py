@@ -23,16 +23,16 @@ def check_files(sheet, parent_directory):
                 file.exists = True
 
                 # We perhaps can't assume this is correct since some don't have parent folders
-                file.errors['Extent'] = False if file.extent == len(os.listdir(path.parent.absolute())) - 1 or file.extent == None else True
+                file.failures['Extent'] = False if file.extent == len(os.listdir(path.parent.absolute())) - 1 or file.extent == None else True
 
                 # 
-                file.errors['Filesize'] = False if (os.path.getsize(file.filePath) >> 20) < 300 else True
+                file.failures['Filesize'] = False if (os.path.getsize(file.filePath) >> 20) < 300 else True
 
         except:
             pass
         
         if not file.exists:
-            file.errors['Existance'] = True
+            file.failures['Existance'] = True
             failures += 1
 
     sheet.failures = failures # Add number of failures to the sheet object
