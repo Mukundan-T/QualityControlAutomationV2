@@ -58,7 +58,7 @@ class ExcelSheet():
     def createScanFileList(self, df):
         for _, row in df.iterrows():
             spreadsheet_extent = int(re.findall(r'\d+', row['extent (total page count including covers)'])[0])
-            record = ScanFile(str(row['Filename']),
+            record = ScanFile(row['Filename'],
                             row['Physical Location'],
                             row['date_created'] if not pd.isna(row['date_created']) else None,
                             spreadsheet_extent if not pd.isna(row['extent (total page count including covers)']) else None)
@@ -113,7 +113,8 @@ class ExcelFile():
 
     def setFailColor(self, newColor):
         self.failColor = newColor
-    
+
+
     """Creates the file structure of an excel file creating each sheet and adding it to the sheetlist
         Method calls sheet.createScanFileList to create the list of files from the sheet dataframe
     """
@@ -145,15 +146,24 @@ class ExcelFile():
             sheetDict = sheet.getSheetErrorDict()
             for key in sheetDict:
 
-                self.dataFrames['QC Pass/Fail'] = self.dataFrames['QC Pass/Fail'].astype(str)
-                self.dataFrames['QC Comments'] = self.dataFrames['QC Comments'].astype(str)
-                self.dataFrames['QC Initials'] = self.dataFrames['QC Initials'].astype(str)
+
+                # Clear failures from dataframe before adding new ones
+                # This means corrected autofails can be overwritten
+                #if self.dataFrames[sheet.sheetName]['QC Results'] == "Fail" and self.dataFrames[sheet.sheetName]['QC Initials'] == "AUTO":
+                #
+                #    self.dataFrames[sheet.sheetName]['QC Results'] = ""
+                #    self.dataFrames[sheet.sheetName]['QC Comments'] = ""
+                #    self.dataFrames[sheet.sheetName]['QC Initials'] = ""
+
+                self.dataFrames[sheet.sheetName]['QC Results'] = self.dataFrames[sheet.sheetName]['QC Results'].astype(str).replace(to_replace='nan', value='', regex=True)
+                self.dataFrames[sheet.sheetName]['QC Comments'] = self.dataFrames[sheet.sheetName]['QC Comments'].astype(str).replace(to_replace='nan', value='', regex=True)
+                self.dataFrames[sheet.sheetName]['QC Initials'] = self.dataFrames[sheet.sheetName]['QC Initials'].astype(str) .replace(to_replace='nan', value='', regex=True)
                 # Order matters here - if an error is matched in the order; Existance, Filesize, Extent then the others are ignored
                 # This means the failures go in order of precedence
                 # A file may fail for more than one of these reasons, only the mopst important reason is recorded
                 if sheetDict[key] in ['Extent', 'Filesize', 'Existance']:
                     self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Results'] = 'Fail'
-                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC initials'] = 'AUTO'
+                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Initials'] = 'AUTO'
                 if sheetDict[key] == 'Existance':
                     self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'File does not exist'
                 elif sheetDict[key] == 'Filesize':

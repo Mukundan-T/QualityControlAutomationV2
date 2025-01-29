@@ -78,12 +78,11 @@ def highlight_errors(ExcelFile):
         wb.save(ExcelFile.filepath)
         wb.close()
         xl_file.close()
+        return True
     except:
         wb.close()
         xl_file.close()
         return False
-
-    return True #If false returned then the file is open in an editor
     
 
 """Currently used to set date format to the correct ISO
@@ -98,11 +97,6 @@ def set_field_format(ws, column_name, column_index):
         for cell in ws[get_column_letter(column_index+1)]:
              cell.alignment = Alignment(horizontal='right')
              cell.number_format = "YYYY-MM-DD"
-
-# Need a method to check if a file has been auto failed in the past by the program
-# Delete pass/fail, comment and intials from dataframes
-def clear_auto_fails():
-    pass
 
 # Test this
 # Can we call row highlighter from this method?
@@ -127,5 +121,10 @@ def write_excelfile(ExcelFile):
             for c_idx, value in enumerate(row, 1):
                 ws.cell(row=r_idx+2, column=c_idx).value = value
 
-    wb.save(ExcelFile.filePath)
-    wb.close()
+
+    try:
+        wb.save(ExcelFile.filePath)
+        wb.close()
+        return True
+    except:
+        return False
