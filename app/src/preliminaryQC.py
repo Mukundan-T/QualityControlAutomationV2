@@ -9,6 +9,15 @@ Edited by:
 import os, glob, re
 from pathlib import Path
 
+
+"""Conducts the preliminary QC checks
+    Checks if the file exists in the file structure, if the extent is correct 
+    and if the filesize is less than 300mb
+    Adds the respecive failures to the count and to the file's failure dictionary
+Args:
+    sheet: excel sheet containing a list of files
+    parent_directory: the OneDrive parent folder to search through
+"""
 def check_files(sheet, parent_directory):
 
     failures = 0
