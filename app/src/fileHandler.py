@@ -30,6 +30,14 @@ def file_open_check(filepath):
     
 
 #Computationally expensive but should work for now
+"""Removes specific highlight colors from the spreadsheet to allow the program to be run
+    continually after each error is rectified
+Args:
+    ExcelFile: Excel file to remove colors on - contains the error colors dictionary
+    wb: Work book opened with Openpyxl
+    colors_to_remove: allows specification of individual colors so running spreadsheetChecks alone
+        (for example) doesn't remove failure highlighting
+"""
 def reset_colors(ExcelFile, wb, colors_to_remove):
     fill_reset = openpyxl.styles.PatternFill(fill_type=None)
     for sheet in ExcelFile.sheetList:

@@ -33,3 +33,7 @@
     Could be interesting to add this functionality - would definitely make the fails a little clearer for the person that has to go through and itentify records to sort out
 
 * Should we split the failures and the errors into separate dictionaries inside the excel file/sheet objects? The prelimQC and spreadsheetChecks are supposedly independent of one another so this would reduce complexity when run on their own. Less errors to check through for each item.
+
+2/5/25
+
+* Need to add functionality to clear the auto failed rows for each run of the program in case the problem has been remedied
