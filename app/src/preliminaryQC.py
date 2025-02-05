@@ -27,9 +27,11 @@ def check_files(sheet, parent_directory):
                     file.failures['Extent'] = False
                 else:
                     file.failures['Extent'] = True
+                    failures += 1
 
-                # 
-                file.failures['Filesize'] = False if (os.path.getsize(file.filePath) >> 20) < 300 else True
+                if not (os.path.getsize(file.filePath) >> 20) < 300:
+                    file.failures['Filesize'] = True
+                    failures += 1
 
         except:
             pass
