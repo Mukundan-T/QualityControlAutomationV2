@@ -16,7 +16,7 @@ BATCH_SIZE = 10
 APP_ROOT = os.path.join(ROOT)
 PLATFORM = ""
 
-input_filename = 'sample2.xlsx'
+input_filename = 'sample.xlsx'
 
 # Accounting fot the differences in file structure between Mac and Windows
 # Can be expanded for more operating systems.

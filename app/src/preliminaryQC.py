@@ -23,7 +23,10 @@ def check_files(sheet, parent_directory):
                 file.exists = True
 
                 # We perhaps can't assume this is correct since some don't have parent folders
-                file.failures['Extent'] = False if file.extent == len(os.listdir(path.parent.absolute())) - 1 or file.extent == None else True
+                if file.extent == len(os.listdir(path.parent.absolute())) - 1 or file.extent == None:
+                    file.failures['Extent'] = False
+                else:
+                    file.failures['Extent'] = True
 
                 # 
                 file.failures['Filesize'] = False if (os.path.getsize(file.filePath) >> 20) < 300 else True

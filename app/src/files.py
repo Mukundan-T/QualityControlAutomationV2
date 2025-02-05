@@ -96,7 +96,14 @@ class ExcelSheet():
 
 class ExcelFile():
 
-    errorColors = {"Filename":"FFD291BC", "DupFilename":"FFADD8E6", "Date":"FFFDFD96"} # This is outside the __init__ method so it is shared between all instances of the class
+    # Colors
+    # Incorrect Filename - Orange
+    # Duplicate Filename - Blue
+    # Incorrect Date - Yellow
+    # Failure - Red
+
+
+    errorColors = {"Filename":"FFEFBE7D", "DupFilename":"FF8BD3E6", "Date":"FFE9EC6B"} # This is outside the __init__ method so it is shared between all instances of the class
     failColors = {"Extent":"FFFFADB0", "Filesize":"FFFFADB0", "Existance":"FFFFADB0"} #Done this way to allow expansion of the fail types
 
     def __init__(self, filepath):
@@ -158,7 +165,7 @@ class ExcelFile():
     # Can't test until I can access the onedrive file structure
     def updateDataFrames(self):
         for sheet in self.sheetList:
-            sheetDict = sheet.getSheetErrorDict()
+            sheetDict = sheet.getSheetFailureDict()
             for key in sheetDict:
 
 

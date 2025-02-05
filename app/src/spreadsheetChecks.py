@@ -135,8 +135,12 @@ def check_location_filename(sheet):
 
             if "Box" in Location:
                 pred_filename += ".B" + Location[1].zfill(2)
+
             if "Folder" in Location:
                 pred_filename += ".F" + Location[3].zfill(2)
+            elif len(Location) == 4:
+                pred_filename += "." + Location[3].zfill(2) #Accounts for items not in folders
+
             if "Bulletin" in Location: #Assumes .Bull. for bulletins
                 pred_filename += ".Bull." + Location[5].zfill(2)
             elif "Sheet" in Location: #Assumes .Sheet. for sheets
