@@ -50,7 +50,7 @@ def attempt_format(date):
 
 """Checks the date format and attempts to format the date if in unexpected form
 Args:
-    fileList: list of file objects from excel sheet
+    sheet: excel sheet containing a list of files
 Returns:
     Boolean: True to verify the process was executed successfully
 """
@@ -87,7 +87,7 @@ def check_date_format(sheet):
 
 """Checks for duplicate filenames in the list of files
 Args:
-    fileList: list of file objects from excel sheet
+    sheet: excel sheet containing a list of files
 """
 def check_duplicate_filenames(sheet):
     for file in sheet.fileList:
@@ -118,6 +118,13 @@ def find_file_prefix(fileList):
             pass
 
 
+"""Checks that the filename matches the permenant location for each item in a given sheet
+    Reconstructs an expected filename from the location then compares it to what is recorded
+    Follows a precise naming convention. Box xx, Folder xx, Item type xx
+    Records the error in the file's errors dictionary if there is a discrepancy
+Args:
+    sheet: excel sheet containing a list of files
+"""
 def check_location_filename(sheet):
     prefix = find_file_prefix(sheet.fileList)
     for file in sheet.fileList:
