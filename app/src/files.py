@@ -29,7 +29,7 @@ class ScanFile():
         # DupFilename
         # Extent
         # Filesize
-        # Existance
+        # Existence
         self.errors = {'Date': False,
                        'Filename': False,
                        'DupFilename': False}
@@ -37,7 +37,7 @@ class ScanFile():
         self.failures = {
                         'Extent': False,
                         'Filesize': False,
-                        'Existance': False}
+                        'Existence': False}
     
 
 
@@ -104,7 +104,7 @@ class ExcelFile():
 
 
     errorColors = {"Filename":"FFEFBE7D", "DupFilename":"FF8BD3E6", "Date":"FFE9EC6B"} # This is outside the __init__ method so it is shared between all instances of the class
-    failColors = {"Extent":"FFFFADB0", "Filesize":"FFFFADB0", "Existance":"FFFFADB0"} #Done this way to allow expansion of the fail types
+    failColors = {"Extent":"FFFFADB0", "Filesize":"FFFFADB0", "Existence":"FFFFADB0"} #Done this way to allow expansion of the fail types
 
     def __init__(self, filepath):
         self.filePath = filepath
@@ -180,13 +180,13 @@ class ExcelFile():
                 self.dataFrames[sheet.sheetName]['QC Results'] = self.dataFrames[sheet.sheetName]['QC Results'].astype(str).replace(to_replace='nan', value='', regex=True)
                 self.dataFrames[sheet.sheetName]['QC Comments'] = self.dataFrames[sheet.sheetName]['QC Comments'].astype(str).replace(to_replace='nan', value='', regex=True)
                 self.dataFrames[sheet.sheetName]['QC Initials'] = self.dataFrames[sheet.sheetName]['QC Initials'].astype(str) .replace(to_replace='nan', value='', regex=True)
-                # Order matters here - if an error is matched in the order; Existance, Filesize, Extent then the others are ignored
+                # Order matters here - if an error is matched in the order; Existence, Filesize, Extent then the others are ignored
                 # This means the failures go in order of precedence
                 # A file may fail for more than one of these reasons, only the mopst important reason is recorded
-                if sheetDict[key] in ['Extent', 'Filesize', 'Existance']:
+                if sheetDict[key] in ['Extent', 'Filesize', 'Existence']:
                     self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Results'] = 'Fail'
                     self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Initials'] = 'AUTO'
-                if sheetDict[key] == 'Existance':
+                if sheetDict[key] == 'Existence':
                     self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'File does not exist'
                 elif sheetDict[key] == 'Filesize':
                     self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'Filesize too large'

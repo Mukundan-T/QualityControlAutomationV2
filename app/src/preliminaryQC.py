@@ -37,7 +37,7 @@ def check_files(sheet, parent_directory):
             pass
         
         if not file.exists:
-            file.failures['Existance'] = True
+            file.failures['Existence'] = True
             failures += 1
 
     sheet.failures = failures # Add number of failures to the sheet object
