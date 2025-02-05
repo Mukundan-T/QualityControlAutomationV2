@@ -48,6 +48,14 @@ def reset_colors(ExcelFile, wb, colors_to_remove):
                     cell.fill = fill_reset
 
 
+"""Highlights rows with errors and/or failures with their corresponding hex color
+    Since the function pulls from both the error dictionary and the failure dictionary
+    it can be used in both parts of the program
+Args:
+    ExcelFile: Contains the failure/error inormation and the highliting colors
+Returns:
+    Boolean: True if the save is successful, False if not
+"""
 def highlight_errors(ExcelFile):
 
     xl_file = pd.ExcelFile(ExcelFile.filePath)       
@@ -67,17 +75,7 @@ def highlight_errors(ExcelFile):
 
         for file in errors:
             error_color = colors[errors[file]]
-            """
-            try:
-                if errors[file] == DupFilename
-                    error_color = ExcelFile.errorColors['Duplicate']
-                elif file.errors['Filename']:
-                    error_color = ExcelFile.errorColors['Filename']
-                elif file.errors['Date']:
-                    error_color = ExcelFile.errorColors['DateFormat']
-            except:
-                error_color = ExcelFile.errorColors['Filename'] # If try fails to an exception we know fileName is likely Nan or incorrect format
-            """
+        
             if error_color != None:
                  fill = openpyxl.styles.PatternFill(start_color=error_color, end_color=error_color, fill_type="solid")
                  for index, row in dt.iterrows():
