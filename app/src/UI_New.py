@@ -257,7 +257,6 @@ class Ui_MainWindow(object):
         self.updateColorSelector()
 
 
-
     def spreadsheetChecks(self):
 
         if self.file.filePath == None:
