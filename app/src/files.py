@@ -8,7 +8,9 @@ Edited by:
 """
 from typing import List
 import pandas as pd
-import re, csv
+import re, csv, os, easygui
+
+COLOR_PALETTE = os.path.join(os.path.dirname(__file__), 'assets\\errorColors.csv')
 
 class ScanFile():
 
@@ -52,10 +54,10 @@ class ExcelSheet():
         self.fileList: List[ScanFile] = list()
 
     def getErrorRate(self):
-        return self.errors / len(self.fileList)
+        return (self.errors / len(self.fileList) * 100)
     
     def getFailureRate(self):
-        return self.failures / len(self.fileList)
+        return (self.failures / len(self.fileList) * 100)
 
     """Creates a list of ScanFile objects from the dataframe"""
     def createScanFileList(self, df):
@@ -102,22 +104,23 @@ class ExcelFile():
     # Incorrect Date - Yellow
     # Failure - Red
 
-
-    errorColors = {"Filename":"FFEFBE7D", "DupFilename":"FF8BD3E6", "Date":"FFE9EC6B"} # This is outside the __init__ method so it is shared between all instances of the class
-    failColors = {"Extent":"FFFFADB0", "Filesize":"FFFFADB0", "Existence":"FFFFADB0"} #Done this way to allow expansion of the fail types
+    colorPalette = COLOR_PALETTE
+    errorColors = {"Filename":"", "DupFilename":"", "Date":""} # This is outside the __init__ method so it is shared between all instances of the class
+    failColors = {"Extent":"", "Filesize":"", "Existence":""} #Done this way to allow expansion of the fail types
 
     def __init__(self, filepath):
         self.filePath = filepath
         self.sheetList: List[ExcelSheet] = list()
         self.dataFrames = None
+        self.retrieveErrorColors()
 
     """Allows the user to change the spreadsheet in the UI without creating a new object instance
         Clears the old sheet list, which in turn clearsthe file storage
     Args:
         newpath (str): the new filepath selected
     """
-    def setFilePath(self, newpath):
-        self.filePath = newpath
+    def setFilePath(self):
+        self.filePath = easygui.fileopenbox()
         self.sheetList: List[ExcelSheet] = list()
 
     def getTotalError(self):
@@ -135,17 +138,25 @@ class ExcelFile():
     def setFailColor(self, failType, newColor):
         self.failColors[failType] = newColor
 
-    def retrieveErrorColors(self, filepath):
-        with open(filepath, 'r') as file:
+    def retrieveErrorColors(self):
+        with open(COLOR_PALETTE, 'r', newline='') as file:
             csv_reader = csv.reader(file)
             header = next(csv_reader)  # Skip the header row
-            print(f"Header: {header}")
             for row in csv_reader:
-                print(f"Row: {row}")
+                if row[0] in self.failColors:
+                    self.failColors[row[0]] = row[1]
+                else:
+                    self.errorColors[row[0]] = row[1]
 
-    # Needs checking
-    def writeErrorColors(self, filepath):
-        with open(filepath, 'w') as file:
+    # Defaults
+    # Filename,FFEFBE7D
+    # DupFilename,FF8BD3E6
+    # Date,FFE9EC6B
+    # Extent,FFFFADB0
+    # Filesize,FFFFADB0
+    # Existence,FFFFADB0
+    def writeErrorColors(self):
+        with open(COLOR_PALETTE, 'w', newline='') as file:
             csv_writer = csv.writer(file)
             csv_writer.writerow(['ErrorType', 'Hex'])
             for error in self.errorColors.keys():

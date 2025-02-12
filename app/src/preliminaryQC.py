@@ -6,7 +6,7 @@ Authored by James Gaskell
 Edited by:
 
 """
-import os, glob, re
+import os, glob, re, easygui
 from pathlib import Path
 
 
@@ -18,8 +18,10 @@ Args:
     sheet: excel sheet containing a list of files
     parent_directory: the OneDrive parent folder to search through
 """
-def check_files(sheet, parent_directory):
+def check_files(sheet):
 
+    parent_directory = easygui.diropenbox()
+    
     failures = 0
 
     for file in sheet.fileList:
