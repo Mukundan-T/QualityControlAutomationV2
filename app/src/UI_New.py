@@ -166,6 +166,7 @@ class Ui_MainWindow(object):
         self.colorDisplay.setStyleSheet("background-color: rgb(255, 255, 255)")
         self.colorDisplay.setText("")
         self.colorDisplay.setObjectName("colorDisplay")
+        self.colorDisplay.clicked.connect(self.openColorDialog)
 
         self.errorSelector = QtWidgets.QComboBox(self.colorFrame)
         self.errorSelector.setGeometry(QtCore.QRect(80, 45, 221, 21))
@@ -203,7 +204,7 @@ class Ui_MainWindow(object):
         self.fileInput.setObjectName("fileInput")
 
         self.excel = QtWidgets.QLabel(self.centralwidget)
-        self.excelPixmap = QtGui.QPixmap(os.getcwd() + "\\Python Scripts\\excel.png")
+        self.excelPixmap = QtGui.QPixmap(os.path.join(os.path.dirname(__file__), 'assets\\excel.png'))
         self.smaller_pixmap = self.excelPixmap.scaled(24, 24, QtCore.Qt.KeepAspectRatio)
         self.excel.setPixmap(self.smaller_pixmap)   
         self.excel.move(25,30)
@@ -241,6 +242,17 @@ class Ui_MainWindow(object):
              rgb_float = mcolors.hex2color("#" + self.file.failColors[error][2:])
         background_rgb = tuple(int(c * 255) for c in rgb_float)
         self.colorDisplay.setStyleSheet("background-color: rgb" + str(background_rgb))
+
+    def openColorDialog(self):
+        color = QtWidgets.QColorDialog.getColor().name()
+        error = self.errorSelector.currentText()
+        if error in self.file.errorColors.keys():
+             self.file.setErrorColor(error, ("FF" + color.upper()[1:]))
+        else:
+             self.file.setFailColor(error, ("FF" + color.upper()[1:]))
+
+        self.file.writeErrorColors()
+        self.updateColorSelector()
 
 
 
