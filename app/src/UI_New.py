@@ -246,10 +246,12 @@ class Ui_MainWindow(object):
     def openColorDialog(self):
         color = QtWidgets.QColorDialog.getColor().name()
         error = self.errorSelector.currentText()
-        if error in self.file.errorColors.keys():
-             self.file.setErrorColor(error, ("FF" + color.upper()[1:]))
-        else:
-             self.file.setFailColor(error, ("FF" + color.upper()[1:]))
+
+        if color != "#000000":
+                if error in self.file.errorColors.keys():
+                     self.file.setErrorColor(error, ("FF" + color.upper()[1:]))
+                else:
+                     self.file.setFailColor(error, ("FF" + color.upper()[1:]))
 
         self.file.writeErrorColors()
         self.updateColorSelector()
@@ -257,32 +259,50 @@ class Ui_MainWindow(object):
 
 
     def spreadsheetChecks(self):
+
+        if self.file.filePath == None:
+             messagebox.showerror("Error","You must select an excel file before proceeding")
+             return
+        
         outputText = ""
+        count = 0
         for sheet in self.file.sheetList:
+            if count != 0:
+                 outputText += "\n"
             spreadsheetChecks.check_date_format(sheet)
             spreadsheetChecks.check_duplicate_filenames(sheet)
             spreadsheetChecks.check_location_filename(sheet)
-            outputText += (sheet.sheetName + " error rate: " + str(round(sheet.getErrorRate(), 2)) + "%\n")
+            outputText += (sheet.sheetName + " error rate: " + str(round(sheet.getErrorRate(), 2)) + "%")
             self.outputBox.setText(outputText)
+            count += 1
 
         success = fileHandler.highlight_errors(self.file)
         if not success:
              messagebox.showerror("Error","The excel file is open in editor so changes could not be saved")
         else:
-             print("Success")
+             self.outputBox.append("** Success! **")
 
     def prelimQC(self):
+
+        if self.file.filePath == None:
+             messagebox.showerror("Error","You must select an excel file before proceeding")
+             return
+        
         outputText = ""
+        count = 0
         for sheet in self.file.sheetList:
+            if count != 0:
+                 outputText += "\n"
             preliminaryQC.check_files(sheet)
-            outputText += (sheet.sheetName + " failure rate: " + str(round(sheet.getFailureRate(), 2)) + "%\n")
+            outputText += (sheet.sheetName + " failure rate: " + str(round(sheet.getFailureRate(), 2)) + "%")
             self.outputBox.setText(outputText)
+            count += 1
 
         self.file.updateDataFrames()
         success = fileHandler.write_excelfile(self.file)
         if success:
                 success = fileHandler.highlight_errors(self.file)
-                print("Success")
+                self.outputBox.append("** Success! **")
         else:
                 messagebox.showerror("Error","The excel file is open in editor so changes could not be saved")
 
