@@ -147,7 +147,7 @@ class ExcelFile():
     def writeErrorColors(self, filepath):
         with open(filepath, 'w') as file:
             csv_writer = csv.writer(file)
-            csv_writer.writerow(['ErrorType', 'Color'])
+            csv_writer.writerow(['ErrorType', 'Hex'])
             for error in self.errorColors.keys():
                 csv_writer.writerow([error, self.errorColors[error]])
             for fail in self.failColors.keys():
