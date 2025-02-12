@@ -1,7 +1,10 @@
 ErrorType,Hex
-Filename,FFFFBBD8
+Filename,FFA365FF
 DupFilename,FFFF90B1
-Date,FF545FFF
+Date,FFFF3CB1
+Extent,FFFFADB0
+Filesize,FF85FF99
+Existence,FFFFADB0
 Extent,FFFFADB0
 Filesize,FF38FF15
 Existence,FFFFADB0
