@@ -1,4 +1,4 @@
-from config import DEFAULT_INPUT_FILE, DEFAULT_ONEDRIVE_FOLDER
+from config import DEFAULT_INPUT_FILE, DEFAULT_ONEDRIVE_FOLDER, DEFAULT_ERROR_COLORS
 import files, spreadsheetChecks, preliminaryQC, fileHandler
 from tkinter import messagebox
 
@@ -10,6 +10,7 @@ while file_open:
     file_open = fileHandler.file_open_check(DEFAULT_INPUT_FILE)
 
 spreadsheet = files.ExcelFile(DEFAULT_INPUT_FILE)
+spreadsheet.retrieveErrorColors(DEFAULT_ERROR_COLORS)
 
 spreadsheet.createFileStructure()
 

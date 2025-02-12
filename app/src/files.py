@@ -8,7 +8,7 @@ Edited by:
 """
 from typing import List
 import pandas as pd
-import re
+import re, csv
 
 class ScanFile():
 
@@ -132,9 +132,26 @@ class ExcelFile():
     def setErrorColor(self, errorType, newColor):
         self.errorColors[errorType] = newColor
 
-    def setFailColor(self, newColor):
-        self.failColor = newColor
+    def setFailColor(self, failType, newColor):
+        self.failColors[failType] = newColor
 
+    def retrieveErrorColors(self, filepath):
+        with open(filepath, 'r') as file:
+            csv_reader = csv.reader(file)
+            header = next(csv_reader)  # Skip the header row
+            print(f"Header: {header}")
+            for row in csv_reader:
+                print(f"Row: {row}")
+
+    # Needs checking
+    def writeErrorColors(self, filepath):
+        with open(filepath, 'w') as file:
+            csv_writer = csv.writer(file)
+            csv_writer.writerow(['ErrorType', 'Color'])
+            for error in self.errorColors.keys():
+                csv_writer.writerow([error, self.errorColors[error]])
+            for fail in self.failColors.keys():
+                csv_writer.writerow([fail, self.failColors[fail]])
 
     """Creates the file structure of an excel file creating each sheet and adding it to the sheetlist
         Method calls sheet.createScanFileList to create the list of files from the sheet dataframe
