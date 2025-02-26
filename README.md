@@ -20,7 +20,7 @@ The user has the option to personalize the highlighting colors in the UI for eac
 
 ## Developments
 
-The object file structure lends itself well to a more complete quality control process where the QCer (Quality Controller) would not have to interact with the file structure at all. This is a potential future development and would improve productivity beyond the measures this program already introduces.
+The object file structure lends itself well to a more complete quality control process where the QCer (Quality Controller) would not have to interact with the file structure at all. This is a potential future development and would improve productivity beyond the measures this program already introduces. This functionality is present with a button on the UI but is currently non-functional.
 
 ## Testing
 
