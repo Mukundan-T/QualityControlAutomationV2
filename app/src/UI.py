@@ -9,22 +9,60 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import os, Singleton
-import tkinter as tk
+import files, spreadsheetChecks, preliminaryQC, fileHandler
+import os, easygui, shutil
+from tkinter import messagebox
+import matplotlib.colors as mcolors
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+import files  # Assuming 'files' is a module containing 'ExcelFile'
+
+class SettingsDialog(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Settings")
+        self.setGeometry(100, 100, 300, 150)
+        self.parent = parent
+        
+        if parent:
+            parent_geom = parent.frameGeometry()  # Get the full widget geometry
+            parent_top_right = parent.mapToGlobal(parent_geom.topRight())  # Get top-right position
+            self.move(parent_top_right.x() - self.width() + 20, parent_top_right.y() + 20)
+        
+        self.reset_factory = QtWidgets.QPushButton("Factory Reset", self)
+        self.reset_factory.clicked.connect(self.resetFactory)
+
+        self.clear_cached_colors = QtWidgets.QPushButton("Clear Cached Colors", self)
+        self.clear_cached_colors.clicked.connect(self.clearCachedColors)
+        
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.reset_factory)
+        layout.addWidget(self.clear_cached_colors)
+        self.setLayout(layout)
+
+    def resetFactory(self):
+        source = (os.path.join(os.path.dirname(__file__), 'assets\\defaultColors.csv'))
+        destination = (os.path.join(os.path.dirname(__file__), 'assets\\errorColors.csv'))
+        shutil.copyfile(source, destination)
+        self.close()
+
+    def clearCachedColors(self):
+        self.close()
+        pass
+             
 
 
 class Ui_MainWindow(object):
     def __init__(self):
         super().__init__()
-        self.title = 'Quality Control Automation'
         self.left = 20
         self.top = 80
         self.width = 600
         self.height = 360
-        self.program = Singleton.Program()
+        self.file = files.ExcelFile(None)
 
     def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
+        MainWindow.setWindowTitle("'Quality Control Automation'")
         #MainWindow.resize(682, 401)
         MainWindow.setFixedSize(682, 401)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -55,6 +93,7 @@ class Ui_MainWindow(object):
 "border-color: rgb(0, 0, 0);\n"
 "padding: 4px;")
         self.SpreadsheetChecks.setObjectName("SpreadsheetChecks")
+        self.SpreadsheetChecks.clicked.connect(self.spreadsheetChecks)
 
         self.PrelimQC = QtWidgets.QPushButton(self.menuFrame)
         self.PrelimQC.setGeometry(QtCore.QRect(20, 130, 271, 61))
@@ -71,6 +110,7 @@ class Ui_MainWindow(object):
 "border-color: rgb(0, 0, 0);\n"
 "padding: 4px;")
         self.PrelimQC.setObjectName("PrelimQC")
+        self.PrelimQC.clicked.connect(self.prelimQC)
 
         self.FullQC = QtWidgets.QPushButton(self.menuFrame)
         self.FullQC.setGeometry(QtCore.QRect(20, 210, 271, 61))
@@ -127,7 +167,7 @@ class Ui_MainWindow(object):
         self.outputBox.setGeometry(QtCore.QRect(10, 40, 301, 131))
         font = QtGui.QFont()
         font.setFamily("Arial")
-        font.setPointSize(7)
+        font.setPointSize(9)
         self.outputBox.setFont(font)
         self.outputBox.setStyleSheet("background-color:rgb(255, 255, 255);\n"
 "border-style: outset;\n"
@@ -162,12 +202,21 @@ class Ui_MainWindow(object):
         self.colorDisplay.setStyleSheet("background-color: rgb(255, 255, 255)")
         self.colorDisplay.setText("")
         self.colorDisplay.setObjectName("colorDisplay")
+        self.colorDisplay.clicked.connect(self.openColorDialog)
 
         self.errorSelector = QtWidgets.QComboBox(self.colorFrame)
         self.errorSelector.setGeometry(QtCore.QRect(80, 45, 221, 21))
         self.errorSelector.setObjectName("errorSelector")
-        for error in self.program.Error_Colors.keys():
+        for error in self.file.errorColors.keys():
                 self.errorSelector.addItem(error)
+        for failure in self.file.failColors.keys():
+                self.errorSelector.addItem(failure)
+
+        rgb_float = mcolors.hex2color("#" + self.file.errorColors[self.errorSelector.currentText()][2:])
+        background_rgb = tuple(int(c * 255) for c in rgb_float)
+        self.colorDisplay.setStyleSheet("background-color: rgb" + str(background_rgb))
+
+        self.errorSelector.currentIndexChanged.connect(self.updateColorSelector)
 
         self.selectionLine = QtWidgets.QFrame(self.colorFrame)
         self.selectionLine.setGeometry(QtCore.QRect(50, 54, 21, 2))
@@ -178,7 +227,7 @@ class Ui_MainWindow(object):
         # Top portion with all its items
         # Excel logo, search bar, search button
         self.fileInput = QtWidgets.QLineEdit("C://", self.centralwidget)
-        self.fileInput.setGeometry(QtCore.QRect(70, 30, 500, 25))
+        self.fileInput.setGeometry(QtCore.QRect(65, 30, 485, 25))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(8)
@@ -191,13 +240,28 @@ class Ui_MainWindow(object):
         self.fileInput.setObjectName("fileInput")
 
         self.excel = QtWidgets.QLabel(self.centralwidget)
-        self.excelPixmap = QtGui.QPixmap(os.getcwd() + "\\Python Scripts\\excel.png")
-        self.smaller_pixmap = self.excelPixmap.scaled(24, 24, QtCore.Qt.KeepAspectRatio)
-        self.excel.setPixmap(self.smaller_pixmap)   
+        self.excelPixmap = QtGui.QPixmap(os.path.join(os.path.dirname(__file__), 'assets\\excel.png'))
+        self.smaller_xl_pixmap = self.excelPixmap.scaled(24, 24, QtCore.Qt.KeepAspectRatio)
+        self.excel.setPixmap(self.smaller_xl_pixmap)   
         self.excel.move(25,30)
 
+        self.settings = QtWidgets.QPushButton(self.centralwidget)
+        self.settingsPixmap = QtGui.QPixmap(os.path.join(os.path.dirname(__file__), 'assets\\settings.webp'))
+        icon = QtGui.QIcon(self.settingsPixmap)
+        self.settings.setIcon(icon)
+        self.settings.setIconSize(QtCore.QSize(22, 22))  # Set the icon size to 100x100 pixels
+        self.settings.move(636,32)
+        self.settings.setStyleSheet("""
+            QPushButton {
+                border: none;
+                background: transparent;
+                padding: 0;
+            }
+        """)
+        self.settings.clicked.connect(self.openSettings)
+
         self.Search = QtWidgets.QPushButton(self.centralwidget)
-        self.Search.setGeometry(QtCore.QRect(580, 33, 71, 20))
+        self.Search.setGeometry(QtCore.QRect(565, 33, 60, 20))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(7)
@@ -209,15 +273,97 @@ class Ui_MainWindow(object):
 "border-color: rgb(0, 0, 0);\n"
 "padding: 1px;")
         self.Search.setObjectName("Search")
-        self.Search.clicked.connect(self.updateTextbox)
-
-
-
+        self.Search.clicked.connect(self.updateSearchbar)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+
+    def updateSearchbar(self):
+        self.file.setFilePath()
+        self.fileInput.setText(self.file.filePath)
+        self.file.createFileStructure()
+
+    def openSettings(self):
+        dialog = SettingsDialog(self.centralwidget)
+        dialog.exec_()
+
+    def updateColorSelector(self):
+        error = self.errorSelector.currentText()
+        if error in self.file.errorColors.keys():
+             rgb_float = mcolors.hex2color("#" + self.file.errorColors[error][2:])
+        else:
+             rgb_float = mcolors.hex2color("#" + self.file.failColors[error][2:])
+        background_rgb = tuple(int(c * 255) for c in rgb_float)
+        self.colorDisplay.setStyleSheet("background-color: rgb" + str(background_rgb))
+
+    def openColorDialog(self):
+        color = QtWidgets.QColorDialog.getColor().name()
+        error = self.errorSelector.currentText()
+
+        if color != "#000000":
+                if error in self.file.errorColors.keys():
+                     self.file.setErrorColor(error, ("FF" + color.upper()[1:]))
+                else:
+                     self.file.setFailColor(error, ("FF" + color.upper()[1:]))
+
+        self.file.writeErrorColors()
+        self.updateColorSelector()
+
+
+    def spreadsheetChecks(self):
+
+        if self.file.filePath == None:
+             messagebox.showerror("Error","You must select an excel file before proceeding")
+             return
+        
+        outputText = ""
+        count = 0
+        for sheet in self.file.sheetList:
+            if count != 0:
+                 outputText += "\n"
+            spreadsheetChecks.check_date_format(sheet)
+            spreadsheetChecks.check_duplicate_filenames(sheet)
+            spreadsheetChecks.check_location_filename(sheet)
+            outputText += (sheet.sheetName + " error rate: " + str(round(sheet.getErrorRate(), 2)) + "%")
+            self.outputBox.setText(outputText)
+            count += 1
+
+        success = fileHandler.highlight_errors(self.file)
+        if not success:
+             messagebox.showerror("Error","The excel file is open in editor so changes could not be saved")
+        else:
+             self.outputBox.append("** Success! **")
+
+    def prelimQC(self):
+
+        if self.file.filePath == None:
+             messagebox.showerror("Error","You must select an excel file before proceeding")
+             return
+        
+        parent_directory = easygui.diropenbox()
+        
+        outputText = ""
+        count = 0
+        for sheet in self.file.sheetList:
+            if count != 0:
+                 outputText += "\n"
+            preliminaryQC.check_files(sheet, parent_directory)
+            outputText += (sheet.sheetName + " failure rate: " + str(round(sheet.getFailureRate(), 2)) + "%")
+            self.outputBox.setText(outputText)
+            count += 1
+
+        self.file.updateDataFrames()
+        success = fileHandler.write_excelfile(self.file)
+        if success:
+                success = fileHandler.highlight_errors(self.file)
+                self.outputBox.append("** Success! **")
+        else:
+                messagebox.showerror("Error","The excel file is open in editor so changes could not be saved")
+
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -238,20 +384,6 @@ class Ui_MainWindow(object):
         self.colorSelectorHeader.setText(_translate("MainWindow", "Color Selector"))
         self.colorDisplay.setToolTip(_translate("MainWindow", "<html><head/><body><p>Click here to select a new color for this error</p></body></html>"))
         self.Search.setText(_translate("MainWindow", "Search"))
-
-
-    def updateTextbox(self):
-        self.program.get_excel_file()
-        if self.program.Spreadsheet.filepath != None:
-            text = self.program.Spreadsheet.filepath
-        self.fileInput.setText(text)
-
-def runPrelimQC(self):
-        if self.program.Spreadsheet != None:
-            self.program.get_parent_directory()
-            self.program.run_prelim_QC()
-        else:
-            tk.messagebox.showerror("File Error", "No Spreadsheet selected. Please search for the spreadsheet and try again")
 
 
 if __name__ == "__main__":
