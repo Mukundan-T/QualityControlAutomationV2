@@ -1,6 +1,16 @@
 # Quality Control Automation Program
 
-This is the current working version of the Quality Control Program designed to fit into Schaffer Library's digitization workflow. To use the program run UI.py.
+This is the current working version of the Quality Control Program designed to fit into Schaffer Library's digitization workflow.
+
+## Setup
+
+To set up the program:
+
+1. Navigate to scripts
+2. Click on setup.cmd. This will install requirements and create a shortcut to the main program file
+3. Locate the desktop shortcut and run the program!
+
+The program works with python 3.12.5, and will likely work with later versions of python but you may need an update if any of the requirements fail to install. This will be indicated with an error upon running the setup.
 
 ## Features
 
