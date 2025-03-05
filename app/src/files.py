@@ -11,6 +11,7 @@ import pandas as pd
 import re, csv, os, easygui
 
 COLOR_PALETTE = os.path.join(os.path.dirname(__file__), 'assets\\errorColors.csv')
+CACHED_COLORS = os.path.join(os.path.dirname(__file__), 'assets\\prevColors.txt')
 
 class ScanFile():
 
@@ -107,6 +108,7 @@ class ExcelFile():
     colorPalette = COLOR_PALETTE
     errorColors = {"Filename":"", "DupFilename":"", "Date":""} # This is outside the __init__ method so it is shared between all instances of the class
     failColors = {"Extent":"", "Filesize":"", "Existence":""} #Done this way to allow expansion of the fail types
+    cachedColors = {}
 
     def __init__(self, filepath):
         self.filePath = filepath
@@ -147,6 +149,26 @@ class ExcelFile():
                     self.failColors[row[0]] = row[1]
                 else:
                     self.errorColors[row[0]] = row[1]
+    
+    def retrieveColorCache(self):
+        with open(CACHED_COLORS, "r") as file:
+            line = file.readline().strip()  # Read the first line
+            values = line.split(",").pop()  # Split by comma, remove empty space
+
+        # Create a dictionary with sequential keys
+        self.cachedColors = {f"c{i+1}": value for i, value in enumerate(values)}
+
+    def extendColorCache(self, color):
+        with open(CACHED_COLORS, 'a+') as file:
+            file.write(color + ",")
+            file.close()
+        self.retrieveColorCache()
+
+    def clearColorCache(self):
+        with open(CACHED_COLORS, "w") as file:
+            pass  # No content is written, file is cleared
+
+
 
     # Defaults
     # Filename,FFEFBE7D

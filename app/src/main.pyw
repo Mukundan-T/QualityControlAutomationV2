@@ -306,11 +306,15 @@ class Ui_MainWindow(object):
         dialog = SettingsDialog(self.centralwidget)
         behavior_code = dialog.exec_()  # This blocks execution until the dialog is closed
         match behavior_code:
-                case 1:
+                case 0: # 0 for factory reset
+                  self.file = files.ExcelFile(None)
+                  self.setupUi(MainWindow)
                   self.file.retrieveErrorColors()
+                  self.file.clearColorCache()
                   self.updateColorSelector()
-                case 2:
+                case 1: # 1 for clear cache
                   self.file.retrieveErrorColors()
+                  self.file.clearColorCache()
                   self.updateColorSelector()
         
              
@@ -333,6 +337,8 @@ class Ui_MainWindow(object):
                      self.file.setErrorColor(error, ("FF" + color.upper()[1:]))
                 else:
                      self.file.setFailColor(error, ("FF" + color.upper()[1:]))
+
+                self.file.extendColorCache("FF" + self.colorDisplay.palette().color(self.colorDisplay.backgroundRole()).name().upper()[1:])
 
         self.file.writeErrorColors()
         self.updateColorSelector()

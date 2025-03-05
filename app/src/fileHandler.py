@@ -61,7 +61,7 @@ def highlight_errors(ExcelFile):
     xl_file = pd.ExcelFile(ExcelFile.filePath)       
     wb = openpyxl.load_workbook(xl_file)
 
-    reset_colors(ExcelFile, wb, ExcelFile.errorColors)
+    reset_colors(ExcelFile, wb, ExcelFile.cachedColors.copy.update(ExcelFile.errorColors))
 
     for sheet in ExcelFile.sheetList:
         dt = pd.read_excel(xl_file, sheet.sheetName)
@@ -116,7 +116,7 @@ def set_field_format(ws, column_name, column_index):
 def write_excelfile(ExcelFile):
     wb = openpyxl.load_workbook(ExcelFile.filePath)
  
-    reset_colors(ExcelFile, wb, ExcelFile.failColors) # Only removes fail colors since this is independent of spreadsheetChecks
+    reset_colors(ExcelFile, wb,  ExcelFile.cachedColors.copy.update(ExcelFile.failColors)) # Only removes fail colors since this is independent of spreadsheetChecks
 
     for sheet in ExcelFile.sheetList:
         ws = wb[sheet.sheetName]
