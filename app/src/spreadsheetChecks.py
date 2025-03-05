@@ -67,8 +67,8 @@ def check_date_format(sheet):
                 except:
                     if type(file.date) is str and not success:
                         success, date = attempt_format((file.date))
-                    elif type(file.date) is int and not success:
-                        success, date = year_to_date((file.date))
+                    elif type(file.date) is int or type(file.date) is float and not success:
+                        success, date = year_to_date(int(file.date))
                     if not success: #Last ditch effort, successful if incorrect spelling in date
                         try:
                             date = (parse(spell(file.date.rstrip())))
