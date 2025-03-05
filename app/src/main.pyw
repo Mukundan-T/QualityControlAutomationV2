@@ -422,6 +422,6 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
-    app.exec_()
+    sys.exit(app.exec_())
 
 

@@ -58,7 +58,7 @@ Returns:
 """
 def highlight_errors(ExcelFile):
 
-    xl_file = pd.ExcelFile(ExcelFile.filePath)       
+    xl_file = pd.ExcelFile(ExcelFile.filePath, engine="openpyxl")       
     wb = openpyxl.load_workbook(xl_file)
 
     reset_colors(ExcelFile, wb, ExcelFile.cachedColors.copy.update(ExcelFile.errorColors))
