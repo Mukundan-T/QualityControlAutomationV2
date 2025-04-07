@@ -10,6 +10,7 @@ from autocorrect import Speller
 from dateutil.parser import parse
 import datetime, string
 
+
 """Converts dates from year to year and day. E.g. 1980 to 1980-01-01
 Args:
     date: date in year form
@@ -69,7 +70,7 @@ def check_date_format(sheet):
                         success, date = attempt_format((file.date))
                     elif type(file.date) is int or type(file.date) is float and not success:
                         success, date = year_to_date(int(file.date))
-                    if not success: #Last ditch effort, successful if incorrect spelling in date
+                    if not success: # Last ditch effort, successful if incorrect spelling in date
                         try:
                             date = (parse(spell(file.date.rstrip())))
                             date = date.strftime("%Y-%m-%d")
@@ -131,10 +132,14 @@ def check_location_filename(sheet):
         pred_filename = prefix
         if not file.location == None:
 
-            #Does this filter work? I think so...
-            Location = list(filter(None, file.location.translate(str.maketrans('', '', string.punctuation)).split(" ")))
+            # Does this filter work? I think so...
+            # ignore any rows that are not properly po
+            try:
+                Location = list(filter(None, file.location.translate(str.maketrans('', '', string.punctuation)).split(" ")))
+            except:
+                pass
 
-            #ignore any funky filenames
+            # ignore any funky filenames
             try:
                 file.fileName = file.fileName.replace(" ", "") #Removes any spaces that shouldn't be in the filename
             except:
