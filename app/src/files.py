@@ -9,6 +9,7 @@ Edited by:
 from typing import List
 import pandas as pd
 import re, csv, os, easygui
+from tkinter import messagebox
 
 COLOR_PALETTE = os.path.join(os.path.dirname(__file__), 'assets\\errorColors.csv')
 CACHED_COLORS = os.path.join(os.path.dirname(__file__), 'assets\\prevColors.txt')
@@ -227,18 +228,21 @@ class ExcelFile():
                 #    self.dataFrames[sheet.sheetName]['QC Comments'] = ""
                 #    self.dataFrames[sheet.sheetName]['QC Initials'] = ""
 
-                self.dataFrames[sheet.sheetName]['QC Results'] = self.dataFrames[sheet.sheetName]['QC Results'].astype(str).replace(to_replace='nan', value='', regex=True)
-                self.dataFrames[sheet.sheetName]['QC Comments'] = self.dataFrames[sheet.sheetName]['QC Comments'].astype(str).replace(to_replace='nan', value='', regex=True)
-                self.dataFrames[sheet.sheetName]['QC Initials'] = self.dataFrames[sheet.sheetName]['QC Initials'].astype(str) .replace(to_replace='nan', value='', regex=True)
-                # Order matters here - if an error is matched in the order; Existence, Filesize, Extent then the others are ignored
-                # This means the failures go in order of precedence
-                # A file may fail for more than one of these reasons, only the mopst important reason is recorded
-                if sheetDict[key] in ['Extent', 'Filesize', 'Existence']:
-                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Results'] = 'Fail'
-                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Initials'] = 'AUTO'
-                if sheetDict[key] == 'Existence':
-                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'File does not exist'
-                elif sheetDict[key] == 'Filesize':
-                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'Filesize too large'
-                elif sheetDict[key] == 'Extent':
-                    self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'Incorrect page count'
+                try:
+                    self.dataFrames[sheet.sheetName]['QC Results'] = self.dataFrames[sheet.sheetName]['QC Results'].astype(str).replace(to_replace='nan', value='', regex=True)
+                    self.dataFrames[sheet.sheetName]['QC Comments'] = self.dataFrames[sheet.sheetName]['QC Comments'].astype(str).replace(to_replace='nan', value='', regex=True)
+                    self.dataFrames[sheet.sheetName]['QC Initials'] = self.dataFrames[sheet.sheetName]['QC Initials'].astype(str) .replace(to_replace='nan', value='', regex=True)
+                    # Order matters here - if an error is matched in the order; Existence, Filesize, Extent then the others are ignored
+                    # This means the failures go in order of precedence
+                    # A file may fail for more than one of these reasons, only the mopst important reason is recorded
+                    if sheetDict[key] in ['Extent', 'Filesize', 'Existence']:
+                        self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Results'] = 'Fail'
+                        self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Initials'] = 'AUTO'
+                    if sheetDict[key] == 'Existence':
+                        self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'File does not exist'
+                    elif sheetDict[key] == 'Filesize':
+                        self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'Filesize too large'
+                    elif sheetDict[key] == 'Extent':
+                        self.dataFrames[sheet.sheetName].loc[self.dataFrames[sheet.sheetName]['Filename'] == key, 'QC Comments'] = 'Incorrect page count'
+                except KeyError:
+                    return KeyError

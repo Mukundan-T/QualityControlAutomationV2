@@ -384,15 +384,16 @@ class Ui_MainWindow(object):
             self.outputBox.setText(outputText)
             count += 1
 
-        self.file.updateDataFrames()
-        success = fileHandler.write_excelfile(self.file)
-        if success:
-                success = fileHandler.highlight_errors(self.file)
-                self.outputBox.append("** Success! **")
-        else:
-                messagebox.showerror("Error","The excel file is open in editor so changes could not be saved")
-
-
+        try:
+                self.file.updateDataFrames()
+                success = fileHandler.write_excelfile(self.file)
+                if success:
+                        success = fileHandler.highlight_errors(self.file)
+                        self.outputBox.append("** Success! **")
+                else:
+                        messagebox.showerror("Error","The excel file is open in editor so changes could not be saved")
+        except KeyError:
+             messagebox.showerror("Error","The column headers are not in the expected format!")
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
