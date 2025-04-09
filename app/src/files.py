@@ -117,6 +117,12 @@ class ExcelFile():
         self.dataFrames = None
         self.retrieveErrorColors()
 
+    def reset_file_structure(self):
+        self.sheetList: List[ExcelSheet] = list()
+        self.dataFrames = None
+        self.retrieveErrorColors()
+
+
     """Allows the user to change the spreadsheet in the UI without creating a new object instance
         Clears the old sheet list, which in turn clearsthe file storage
     Args:
@@ -192,6 +198,9 @@ class ExcelFile():
     """
     # It might be a better design decision to put this in FileHandler but this works for now
     def createFileStructure(self):
+
+        self.reset_file_structure()
+
         try:
             if self.filePath == None:
                 raise Exception ("No Spreadsheet Selected")

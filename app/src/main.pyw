@@ -298,7 +298,6 @@ class Ui_MainWindow(object):
     def updateSearchbar(self):
         self.file.setFilePath()
         self.fileInput.setText(self.file.filePath)
-        self.file.createFileStructure()
 
     def openSettings(self):
         dialog = SettingsDialog(self.centralwidget)
@@ -344,6 +343,8 @@ class Ui_MainWindow(object):
 
     def spreadsheetChecks(self):
 
+        self.file.createFileStructure()
+
         if self.file.filePath == None:
              messagebox.showerror("Error","You must select an excel file before proceeding")
              return
@@ -367,6 +368,8 @@ class Ui_MainWindow(object):
              self.outputBox.append("** Success! **")
 
     def prelimQC(self):
+
+        self.file.createFileStructure()
 
         if self.file.filePath == None:
              messagebox.showerror("Error","You must select an excel file before proceeding")
