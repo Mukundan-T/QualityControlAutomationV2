@@ -160,7 +160,8 @@ class ExcelFile():
     def retrieveColorCache(self):
         with open(CACHED_COLORS, "r") as file:
             line = file.readline().strip()  # Read the first line
-            values = line.split(",").pop()  # Split by comma, remove empty space
+            values = line.split(",")
+            values.pop()  # Split by comma, remove empty space
 
         # Create a dictionary with sequential keys
         self.cachedColors = {f"c{i+1}": value for i, value in enumerate(values)}
