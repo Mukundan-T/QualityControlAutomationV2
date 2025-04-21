@@ -82,6 +82,40 @@ class SettingsDialog(QtWidgets.QDialog):
         self.accept()
 
 
+class GenerateSpreadsheetDialog(QtWidgets.QDialog):
+    def __init__(self, parent=None, file_obj=None):
+        super().__init__(parent)
+        self.file_obj = file_obj
+        self.setWindowTitle("Generate Spreadsheet")
+        self.setGeometry(100, 100, 350, 300)
+        self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
+        if parent:
+            pg = parent.frameGeometry()
+            pr = parent.mapToGlobal(pg.topRight())
+            self.move(pr.x() - self.width() + 20, pr.y() + 20)
+
+        # reuse your main‐window button style if available
+        self.button_style = getattr(parent, 'button_style', """
+            QPushButton {
+                background-color: rgb(225, 225, 225);
+                border-style: outset;
+                border-width: 1px;
+                border-radius: 10px;
+                border-color: rgb(0, 0, 0);
+                padding: 4px;
+            }
+            QPushButton:hover {
+                background-color: rgb(205, 205, 205);
+            }
+        """)
+
+        # --- Filename input ---
+        lbl_file = QtWidgets.QLabel("Filename:", self)
+        lbl_file.setGeometry(10, 10, 200, 20)
+        self.filenameEdit = QtWidgets.QLineEdit(self)
+        self.filenameEdit.setGeometry(10, 35, 330, 20)
+        self.filenameEdit.setPlaceholderText("e.g. output.xlsx")
+
 class Ui_MainWindow(object):
     def __init__(self):
         super().__init__()
@@ -118,6 +152,7 @@ class Ui_MainWindow(object):
         self.GenerateSpreadsheet.setGeometry(20, 50, 271, 61)
         self.GenerateSpreadsheet.setFont(font)
         self.GenerateSpreadsheet.setStyleSheet(self.button_style)
+        self.GenerateSpreadsheet.clicked.connect(self.openSpreadsheetMaker)
 
         # Spreadsheet Checks
         self.SpreadsheetChecks = QtWidgets.QPushButton("Spreadsheet Checks", self.menuFrame)
@@ -280,6 +315,10 @@ class Ui_MainWindow(object):
             self.file.extendColorCache("FF" + old)
         self.file.writeErrorColors()
         self.updateColorSelector()
+
+    def openSpreadsheetMaker(self):
+        dialog = GenerateSpreadsheetDialog(self.centralwidget)
+        code = dialog.exec_()
 
     def proc_updates(self):
         QtWidgets.QApplication.processEvents()
