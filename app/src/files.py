@@ -9,7 +9,6 @@ Edited by:
 from typing import List
 import pandas as pd
 import re, csv, os, easygui
-from tkinter import messagebox
 
 COLOR_PALETTE = os.path.join(os.path.dirname(__file__), 'assets\\errorColors.csv')
 CACHED_COLORS = os.path.join(os.path.dirname(__file__), 'assets\\prevColors.txt')

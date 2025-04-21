@@ -6,10 +6,17 @@ Authored by James Gaskell
 Edited by:
 
 """
+import os
+import openpyxl.workbook
 import pandas as pd
 import openpyxl
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment
+import tkinter as tk
+from tkinter import messagebox
+
+ACCEPTED_EXTENSIONS = ('csv', 'xlsx', 'xls')
+DEFAULT_EXT = 'xlsx'
 
 
 """Openpyxl does not have permission to edit an open file
@@ -137,10 +144,70 @@ def write_excelfile(ExcelFile):
             for c_idx, value in enumerate(row, 1):
                 ws.cell(row=r_idx+2, column=c_idx).value = value
 
-
     try:
         wb.save(ExcelFile.filePath)
         wb.close()
         return True
     except:
         return False
+    
+
+    
+def extract_ext(filename):
+    if '.' in filename:
+        ext = filename.split('.')[-1]
+        if ext in ACCEPTED_EXTENSIONS:
+            return True
+        else:
+            raise ValueError(f'File extension must be one of: {ACCEPTED_EXTENSIONS}')
+    else:
+        return False
+
+def ask_yes_cancel(title="Confirm", message="This file already exists. Would you like to overwrite?"):
+    root = tk.Tk()
+    root.withdraw()
+    result = messagebox.askyesnocancel(title, message)
+    root.destroy()
+    return result
+
+def generateSpreadsheet(filename, sheetnames):
+    desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+
+    try:
+        if extract_ext(filename):
+            filepath = os.path.join(desktop_path, filename)
+        else:
+            filepath = os.path.join(desktop_path, (filename + ".xlsx"))
+    except ValueError as e:
+        messagebox.showerror("Error", str(e))
+        return False
+
+    if os.path.exists(filepath):
+        result = ask_yes_cancel()
+        if not result:
+            return False
+
+    wb = openpyxl.Workbook()
+    default_sheet = wb.active
+    wb.remove(default_sheet)
+
+    headers = ['contributor', 'contributor_role', 'subjects_personal_names',
+               'Language', 'publisher', 'date_created_free', 'date_created', 'genre', 
+               'rights_statements', 'extent (total page count including covers)',
+               'Physical Location', 'Scanning Instructions', 'Filename', 'date_digital',
+               'Scanner Initials', 'QC Pass/Fail', 'QC Initials', 'QC Comments']
+    
+    column_widths = {
+        'A': 22, 'B': 15, 'C': 27, 'D': 32, 'E': 32, 'F': 35, 'G': 37,
+        'H': 14, 'I': 40, 'J': 23, 'K': 25, 'L': 23, 'M': 17, 'N': 23,
+        'O': 23, 'P': 23, 'Q': 23, 'R': 23
+    }
+
+    for name in sheetnames:
+        ws = wb.create_sheet(title=name)
+        ws.append(headers)
+        for column, width in column_widths.items():
+            ws.column_dimensions[column].width = width
+
+    wb.save(filepath)
+    return True
