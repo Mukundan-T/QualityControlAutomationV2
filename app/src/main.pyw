@@ -17,52 +17,66 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import files  # Assuming 'files' is a module containing 'ExcelFile'
 
 class SettingsDialog(QtWidgets.QDialog):
-    def __init__(self, parent=None, message=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Settings")
-        self.setGeometry(100, 100, 300, 150)
-        self.parent = parent
-        
+        # made dialog taller to fit bigger buttons
+        self.setGeometry(100, 100, 300, 180)
+        self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
         if parent:
-            parent_geom = parent.frameGeometry()  # Get the full widget geometry
-            parent_top_right = parent.mapToGlobal(parent_geom.topRight())  # Get top-right position
-            self.move(parent_top_right.x() - self.width() + 20, parent_top_right.y() + 20)
-        
+            pg = parent.frameGeometry()
+            pr = parent.mapToGlobal(pg.topRight())
+            self.move(pr.x() - self.width() + 20, pr.y() + 20)
+
+        button_style = """
+            QPushButton {
+                background-color: rgb(225, 225, 225);
+                border-style: outset;
+                border-radius: 8px;
+                border-width: 1px;
+                border-color: rgb(0, 0, 0);
+                padding: 1px;
+            }
+            QPushButton:hover {
+                background-color: rgb(205, 205, 205);
+            }
+        """
+
+        # Factory Reset
         self.reset_factory = QtWidgets.QPushButton("Factory Reset", self)
-        self.reset_factory.setGeometry(QtCore.QRect(10, 10, 80, 20))
-        self.reset_factory.setStyleSheet("background-color: rgb(225, 225, 225);\n"
-"border-style: outset;\n"
-"border-radius: 10px;\n"
-"border-color: rgb(0, 0, 0);\n"
-"padding: 4px;")
+        self.reset_factory.setGeometry(QtCore.QRect(10, 10, 280, 40))
+        self.reset_factory.setFixedHeight(40)
+        self.reset_factory.setStyleSheet(button_style)
+        self.reset_factory.setToolTip(
+            "Restore all error colors to their original defaults\n"
+            "(overwrites any custom settings)."
+        )
         self.reset_factory.clicked.connect(self.resetFactory)
 
+        # Clear Cached Colors
         self.clear_cached_colors = QtWidgets.QPushButton("Clear Cached Colors", self)
-        self.clear_cached_colors.setGeometry(QtCore.QRect(20, 50, 271, 61))
-        self.clear_cached_colors.setStyleSheet("background-color: rgb(225, 225, 225);\n"
-"border-style: outset;\n"
-"border-radius: 10px;\n"
-"border-color: rgb(0, 0, 0);\n"
-"padding: 4px;")
+        self.clear_cached_colors.setGeometry(QtCore.QRect(10, 60, 280, 40))
+        self.clear_cached_colors.setFixedHeight(40)
+        self.clear_cached_colors.setStyleSheet(button_style)
+        self.clear_cached_colors.setToolTip(
+            "Discard any previously used colors in memory\n"
+            "so the program can clear them from the Excel spreadsheet"
+        )
         self.clear_cached_colors.clicked.connect(self.clearCachedColors)
-        
+
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.reset_factory)
         layout.addWidget(self.clear_cached_colors)
         self.setLayout(layout)
 
     def resetFactory(self):
-        source = (os.path.join(os.path.dirname(__file__), 'assets\\defaultColors.csv'))
-        destination = (os.path.join(os.path.dirname(__file__), 'assets\\errorColors.csv'))
-        shutil.copyfile(source, destination)
-        self.setResult(0)  # Return a specific result code
+        self.setResult(0)
         self.accept()
-        self.close()
 
     def clearCachedColors(self):
-        self.setResult(1)  # Return a specific result code
+        self.setResult(1)
         self.accept()
-        self.close()
+
              
 
 
@@ -74,6 +88,18 @@ class Ui_MainWindow(object):
         self.width = 600
         self.height = 360
         self.file = files.ExcelFile(None)
+        self.button_style = """
+            QPushButton {
+                background-color: rgb(225, 225, 225);
+                border-style: outset;
+                border-radius: 10px;
+                border-color: rgb(0, 0, 0);
+                padding: 4px;
+            }
+            QPushButton:hover {
+                background-color: rgb(205, 205, 205);
+            }
+        """
 
     def setupUi(self, MainWindow):
         MainWindow.setWindowTitle("'Quality Control Automation'")
@@ -103,49 +129,30 @@ class Ui_MainWindow(object):
         self.GenerateSpreadsheet.setMouseTracking(False)
         self.GenerateSpreadsheet.setStatusTip("")
         self.GenerateSpreadsheet.setAutoFillBackground(False)
-        self.GenerateSpreadsheet.setStyleSheet("background-color: rgb(225, 225, 225);\n"
-        "border-style: outset;\n"
-        "border-radius: 10px;\n"
-        "border-color: rgb(0, 0, 0);\n"
-        "padding: 4px;\n"
-        "hover{background:rgb(248, 248, 248)};")
-        self.GenerateSpreadsheet.setObjectName("Generate Spreadsheet")
+        self.GenerateSpreadsheet.setStyleSheet(self.button_style)
+        self.GenerateSpreadsheet.setObjectName("GenerateSpreadsheet")
 
         # Spreadsheet Checks
         self.SpreadsheetChecks = QtWidgets.QPushButton(self.menuFrame)
         self.SpreadsheetChecks.setGeometry(QtCore.QRect(20, 130, 271, 61))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(11)
         self.SpreadsheetChecks.setFont(font)
         self.SpreadsheetChecks.setStatusTip("")
         self.SpreadsheetChecks.setAutoFillBackground(False)
-        self.SpreadsheetChecks.setStyleSheet("background-color: rgb(225, 225, 225);\n"
-        "border-style: outset;\n"
-        "border-radius: 10px;\n"
-        "border-color: rgb(0, 0, 0);\n"
-        "padding: 4px;")
+        self.SpreadsheetChecks.setStyleSheet(self.button_style)
         self.SpreadsheetChecks.setObjectName("SpreadsheetChecks")
         self.SpreadsheetChecks.clicked.connect(self.spreadsheetChecks)
 
         # Preliminary QC
         self.PrelimQC = QtWidgets.QPushButton(self.menuFrame)
         self.PrelimQC.setGeometry(QtCore.QRect(20, 210, 271, 61))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(11)
         self.PrelimQC.setFont(font)
         self.PrelimQC.setStatusTip("")
         self.PrelimQC.setWhatsThis("")
         self.PrelimQC.setAutoFillBackground(False)
-        self.PrelimQC.setStyleSheet("background-color: rgb(225, 225, 225);\n"
-        "border-style: outset;\n"
-        "border-radius: 10px;\n"
-        "border-color: rgb(0, 0, 0);\n"
-        "padding: 4px;")
+        self.PrelimQC.setStyleSheet(self.button_style)
         self.PrelimQC.setObjectName("PrelimQC")
         self.PrelimQC.clicked.connect(self.prelimQC)
-
+        
         self.menuHeader = QtWidgets.QLabel(self.menuFrame)
         self.menuHeader.setGeometry(QtCore.QRect(10, 10, 291, 20))
         font = QtGui.QFont()
@@ -283,12 +290,20 @@ class Ui_MainWindow(object):
         font.setFamily("Arial")
         font.setPointSize(7)
         self.Search.setFont(font)
-        self.Search.setStyleSheet("background-color: rgb(225, 225, 225);\n"
-"border-style: outset;\n"
-"border-radius: 8px;\n"
-"border-width: 1px;\n"
-"border-color: rgb(0, 0, 0);\n"
-"padding: 1px;")
+        self.Search.setStyleSheet("""
+                                QPushButton {
+                                        background-color: rgb(225, 225, 225);
+                                        border-style: outset;
+                                        border-radius: 8px;
+                                        border-width: 1px;
+                                        border-color: rgb(0, 0, 0);
+                                        padding: 1px;
+                                }
+                                QPushButton:hover {
+                                        background-color: rgb(205, 205, 205);
+                                }
+                                """)
+        
         self.Search.setObjectName("Search")
         self.Search.clicked.connect(self.updateSearchbar)
 
