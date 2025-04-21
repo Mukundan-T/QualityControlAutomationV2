@@ -93,8 +93,27 @@ class Ui_MainWindow(object):
         self.menuFrame.setLineWidth(2)
         self.menuFrame.setObjectName("menuFrame")
 
+        # Generate Spreadsheet
+        self.GenerateSpreadsheet = QtWidgets.QPushButton(self.menuFrame)
+        self.GenerateSpreadsheet.setGeometry(QtCore.QRect(20, 50, 271, 61))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(11)
+        self.GenerateSpreadsheet.setFont(font)
+        self.GenerateSpreadsheet.setMouseTracking(False)
+        self.GenerateSpreadsheet.setStatusTip("")
+        self.GenerateSpreadsheet.setAutoFillBackground(False)
+        self.GenerateSpreadsheet.setStyleSheet("background-color: rgb(225, 225, 225);\n"
+        "border-style: outset;\n"
+        "border-radius: 10px;\n"
+        "border-color: rgb(0, 0, 0);\n"
+        "padding: 4px;\n"
+        "hover{background:rgb(248, 248, 248)};")
+        self.GenerateSpreadsheet.setObjectName("Generate Spreadsheet")
+
+        # Spreadsheet Checks
         self.SpreadsheetChecks = QtWidgets.QPushButton(self.menuFrame)
-        self.SpreadsheetChecks.setGeometry(QtCore.QRect(20, 50, 271, 61))
+        self.SpreadsheetChecks.setGeometry(QtCore.QRect(20, 130, 271, 61))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(11)
@@ -102,15 +121,16 @@ class Ui_MainWindow(object):
         self.SpreadsheetChecks.setStatusTip("")
         self.SpreadsheetChecks.setAutoFillBackground(False)
         self.SpreadsheetChecks.setStyleSheet("background-color: rgb(225, 225, 225);\n"
-"border-style: outset;\n"
-"border-radius: 10px;\n"
-"border-color: rgb(0, 0, 0);\n"
-"padding: 4px;")
+        "border-style: outset;\n"
+        "border-radius: 10px;\n"
+        "border-color: rgb(0, 0, 0);\n"
+        "padding: 4px;")
         self.SpreadsheetChecks.setObjectName("SpreadsheetChecks")
         self.SpreadsheetChecks.clicked.connect(self.spreadsheetChecks)
 
+        # Preliminary QC
         self.PrelimQC = QtWidgets.QPushButton(self.menuFrame)
-        self.PrelimQC.setGeometry(QtCore.QRect(20, 130, 271, 61))
+        self.PrelimQC.setGeometry(QtCore.QRect(20, 210, 271, 61))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(11)
@@ -119,29 +139,12 @@ class Ui_MainWindow(object):
         self.PrelimQC.setWhatsThis("")
         self.PrelimQC.setAutoFillBackground(False)
         self.PrelimQC.setStyleSheet("background-color: rgb(225, 225, 225);\n"
-"border-style: outset;\n"
-"border-radius: 10px;\n"
-"border-color: rgb(0, 0, 0);\n"
-"padding: 4px;")
+        "border-style: outset;\n"
+        "border-radius: 10px;\n"
+        "border-color: rgb(0, 0, 0);\n"
+        "padding: 4px;")
         self.PrelimQC.setObjectName("PrelimQC")
         self.PrelimQC.clicked.connect(self.prelimQC)
-
-        self.FullQC = QtWidgets.QPushButton(self.menuFrame)
-        self.FullQC.setGeometry(QtCore.QRect(20, 210, 271, 61))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(11)
-        self.FullQC.setFont(font)
-        self.FullQC.setMouseTracking(False)
-        self.FullQC.setStatusTip("")
-        self.FullQC.setAutoFillBackground(False)
-        self.FullQC.setStyleSheet("background-color: rgb(225, 225, 225);\n"
-"border-style: outset;\n"
-"border-radius: 10px;\n"
-"border-color: rgb(0, 0, 0);\n"
-"padding: 4px;\n"
-"hover{background:rgb(248, 248, 248)};")
-        self.FullQC.setObjectName("FullQC")
 
         self.menuHeader = QtWidgets.QLabel(self.menuFrame)
         self.menuHeader.setGeometry(QtCore.QRect(10, 10, 291, 20))
@@ -405,8 +408,8 @@ class Ui_MainWindow(object):
         self.SpreadsheetChecks.setText(_translate("MainWindow", "Spreadsheet Checks"))
         self.PrelimQC.setToolTip(_translate("MainWindow", "<html><head/><body><p>Click here to check for missing files and incorrect page numbers</p></body></html>"))
         self.PrelimQC.setText(_translate("MainWindow", "Preliminary QC Checks"))
-        self.FullQC.setToolTip(_translate("MainWindow", "<html><head/><body><p>Click here to perform full QC on the remaining files</p></body></html>"))
-        self.FullQC.setText(_translate("MainWindow", "Full QC"))
+        self.GenerateSpreadsheet.setToolTip(_translate("MainWindow", "<html><head/><body><p>Click here to generate a spreadsheet template for a collection</p></body></html>"))
+        self.GenerateSpreadsheet.setText(_translate("MainWindow", "Generate Spreadsheet"))
         self.menuHeader.setText(_translate("MainWindow", "Menu"))
         self.outputHeader.setText(_translate("MainWindow", "Output"))
         self.outputBox.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
