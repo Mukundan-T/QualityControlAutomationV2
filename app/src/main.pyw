@@ -231,9 +231,12 @@ class Ui_MainWindow(object):
         self.fileInput.setGeometry(65, 30, 485, 25)
         self.fileInput.setFont(QtGui.QFont("Arial", 8))
         self.fileInput.setStyleSheet(
-            "background-color: rgb(255, 255, 255);\n"
-            "border-style: outset;\n"
-            "border-radius: 1px;"
+            """
+            background-color: rgb(255, 255, 255);
+            border: 1px solid black;
+            border-radius: 6px;
+            padding: 2px;      /* optional: gives a bit of inner space */
+            """
         )
 
         self.excel = QtWidgets.QLabel(self.centralwidget)
@@ -273,8 +276,10 @@ class Ui_MainWindow(object):
 
 
     def updateSearchbar(self):
-        self.file.setFilePath()
-        self.fileInput.setText(self.file.filePath)
+        file_selected = self.file.setFilePath()
+        if file_selected:
+            self.fileInput.setText(self.file.filePath)
+
 
 
     def openSettings(self):
