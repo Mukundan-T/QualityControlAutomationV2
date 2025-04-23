@@ -297,6 +297,21 @@ class Ui_MainWindow(object):
                 self.file.retrieveErrorColors()
                 self.file.clearColorCache()
 
+    def openSpreadsheetMaker(self):
+        dialog = GenerateSpreadsheetDialog(self.centralwidget)
+        code, filename, sheets = dialog.exec_() # This needs to return 0 if user cancels or 1 if user completes
+        match code:
+            case 0:
+                fileHandler.generateSpreadsheet(filename, sheets)
+                pass
+            case 1:
+                success, path = fileHandler.generateSpreadsheet(filename, sheets)
+                if success:
+                    self.outputBox.setText("** Created Spreadsheet! **")
+                    self.proc_updates()
+                    threading.Thread(target=self._open_excel_file(path), daemon=True).start()
+                
+
 
     def updateColorSelector(self):
         err = self.errorSelector.currentText()
@@ -321,16 +336,6 @@ class Ui_MainWindow(object):
         self.file.writeErrorColors()
         self.updateColorSelector()
 
-    def openSpreadsheetMaker(self):
-        dialog = GenerateSpreadsheetDialog(self.centralwidget)
-        code = dialog.exec_() # This needs to return 0 if user cancels or 1 if user completes
-        match code:
-            case 0:
-                # Do something here
-                pass
-            case 1:
-                # Do something here
-                pass
 
     def proc_updates(self):
         QtWidgets.QApplication.processEvents()
@@ -371,7 +376,7 @@ class Ui_MainWindow(object):
         self.outputBox.append("** Opening File **")
         self.proc_updates()
         time.sleep(2)
-        threading.Thread(target=self._open_excel_file, daemon=True).start()
+        threading.Thread(target=self._open_excel_file(self.file.filePath), daemon=True).start()
 
 
     def prelimQC(self):
@@ -415,20 +420,15 @@ class Ui_MainWindow(object):
             self.outputBox.append("** Opening File **")
             self.proc_updates()
             time.sleep(2)
-            threading.Thread(target=self._open_excel_file, daemon=True).start()
+            threading.Thread(target=self._open_excel_file(self.file.filePath), daemon=True).start()
 
         except KeyError:
             messagebox.showerror("Error", "The column headers are not in the expected format!")
 
 
-    def _open_excel_file(self):
-        path = self.file.filePath
-        if not path or not os.path.exists(path):
-            return
-        try:
-            os.startfile(path)
-        except AttributeError:
-            QDesktopServices.openUrl(QUrl.fromLocalFile(path))
+    def _open_excel_file(self, path):
+        os.startfile(filepath=path)
+
 
 
 if __name__ == "__main__":

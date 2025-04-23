@@ -208,4 +208,5 @@ def generateSpreadsheet(filename, sheetnames):
             ws.column_dimensions[column].width = width
 
     wb.save(filepath)
-    return True
+    
+    return True, filepath
