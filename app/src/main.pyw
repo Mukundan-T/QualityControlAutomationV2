@@ -292,12 +292,10 @@ class Ui_MainWindow(object):
                 self.file.resetErrorColors()
                 self.file.retrieveErrorColors()
                 self.file.clearColorCache()
-                self.updateColorSelector()
                 self.setupUi(MainWindow)
             case 2: # Clear Cache
                 self.file.retrieveErrorColors()
                 self.file.clearColorCache()
-                self.updateColorSelector()
 
 
     def updateColorSelector(self):
