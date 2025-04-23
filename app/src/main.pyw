@@ -74,12 +74,12 @@ class SettingsDialog(QtWidgets.QDialog):
         self.setLayout(layout)
 
     def resetFactory(self):
-        self.setResult(0)
-        self.accept()
+        # result 0, then close
+        self.done(1)
 
     def clearCachedColors(self):
-        self.setResult(1)
-        self.accept()
+        # result , then close
+        self.done(2)
 
 
 class GenerateSpreadsheetDialog(QtWidgets.QDialog):
@@ -285,13 +285,16 @@ class Ui_MainWindow(object):
         dialog = SettingsDialog(self.centralwidget)
         code = dialog.exec_()
         match code:
-            case 0:
+            case 0: # Window closed (neither)
+                pass
+            case 1: # Factory Reset
                 self.file = files.ExcelFile(None)
-                self.setupUi(MainWindow)
+                self.file.resetErrorColors()
                 self.file.retrieveErrorColors()
                 self.file.clearColorCache()
                 self.updateColorSelector()
-            case 1:
+                self.setupUi(MainWindow)
+            case 2: # Clear Cache
                 self.file.retrieveErrorColors()
                 self.file.clearColorCache()
                 self.updateColorSelector()
@@ -322,7 +325,14 @@ class Ui_MainWindow(object):
 
     def openSpreadsheetMaker(self):
         dialog = GenerateSpreadsheetDialog(self.centralwidget)
-        code = dialog.exec_()
+        code = dialog.exec_() # This needs to return 0 if user cancels or 1 if user completes
+        match code:
+            case 0:
+                # Do something here
+                pass
+            case 1:
+                # Do something here
+                pass
 
     def proc_updates(self):
         QtWidgets.QApplication.processEvents()
