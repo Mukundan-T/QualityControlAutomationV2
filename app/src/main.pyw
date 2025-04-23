@@ -281,7 +281,6 @@ class Ui_MainWindow(object):
             self.fileInput.setText(self.file.filePath)
 
 
-
     def openSettings(self):
         dialog = SettingsDialog(self.centralwidget)
         code = dialog.exec_()
@@ -330,7 +329,12 @@ class Ui_MainWindow(object):
 
 
     def spreadsheetChecks(self):
+        if not fileHandler.extract_ext(self.file.filePath):
+            messagebox.showerror("Error", "The selected file is not a spreadsheet. The file type must be .xlsx, .csv or .xls")
+            return
+
         self.file.createFileStructure()
+
         if not self.file.filePath:
             messagebox.showerror("Error", "You must select an excel file before proceeding")
             return
@@ -363,7 +367,12 @@ class Ui_MainWindow(object):
 
 
     def prelimQC(self):
+        if not fileHandler.extract_ext(self.file.filePath):
+            messagebox.showerror("Error", "The selected file is not a spreadsheet. The file type must be .xlsx, .csv or .xls")
+            return
+        
         self.file.createFileStructure()
+
         if not self.file.filePath:
             messagebox.showerror("Error", "You must select an excel file before proceeding")
             return
