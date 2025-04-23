@@ -7,7 +7,6 @@ Edited by:
 
 """
 import os
-import openpyxl.workbook
 import pandas as pd
 import openpyxl
 from openpyxl.utils import get_column_letter
@@ -150,7 +149,6 @@ def write_excelfile(ExcelFile):
         return True
     except:
         return False
-    
 
     
 def extract_ext(filename):
