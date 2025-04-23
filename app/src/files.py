@@ -128,7 +128,7 @@ class ExcelFile():
         newpath (str): the new filepath selected
     """
     def setFilePath(self):
-        self.filePath = easygui.fileopenbox()
+        self.filePath = easygui.fileopenbox(default=os.path.join(os.path.expanduser("~"), "Desktop\\"))
         self.sheetList: List[ExcelSheet] = list()
 
     def getTotalError(self):
