@@ -6,12 +6,14 @@ Authored by James Gaskell
 Edited by:
 
 """
+import shutil
 from typing import List
 import pandas as pd
 import re, csv, os, easygui
 
-COLOR_PALETTE = os.path.join(os.path.dirname(__file__), 'assets\\errorColors.csv')
-CACHED_COLORS = os.path.join(os.path.dirname(__file__), 'assets\\prevColors.txt')
+DEFAULT_COLORS = os.path.join(os.path.dirname(__file__), 'assets', 'defaultColors.csv')
+COLOR_PALETTE = os.path.join(os.path.dirname(__file__), 'assets', 'errorColors.csv')
+CACHED_COLORS = os.path.join(os.path.dirname(__file__), 'assets' , 'prevColors.txt')
 
 class ScanFile():
 
@@ -127,9 +129,17 @@ class ExcelFile():
     Args:
         newpath (str): the new filepath selected
     """
-    def setFilePath(self):
-        self.filePath = easygui.fileopenbox()
-        self.sheetList: List[ExcelSheet] = list()
+    def setFilePath(self) -> bool:
+
+        new_path = easygui.fileopenbox(
+            default=os.path.join(os.path.expanduser("~"), "Desktop,", "")
+        )
+        if new_path:
+            self.filePath = new_path
+            self.sheetList: List[ExcelSheet] = []
+            return True
+        else:
+            return False
 
     def getTotalError(self):
         return sum([sheet.errors for sheet in self.sheetList])
@@ -145,6 +155,9 @@ class ExcelFile():
 
     def setFailColor(self, failType, newColor):
         self.failColors[failType] = newColor
+
+    def resetErrorColors(self):
+        shutil.copyfile(DEFAULT_COLORS, COLOR_PALETTE)
 
     def retrieveErrorColors(self):
         with open(COLOR_PALETTE, 'r', newline='') as file:
