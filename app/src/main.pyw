@@ -14,8 +14,6 @@ import easygui
 from tkinter import messagebox
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtCore import QUrl
 
 import files, spreadsheetChecks, preliminaryQC, fileHandler
 import matplotlib.colors as mcolors
@@ -86,6 +84,9 @@ class GenerateSpreadsheetDialog(QtWidgets.QDialog):
     def __init__(self, parent=None, file_obj=None):
         super().__init__(parent)
         self.file_obj = file_obj
+        self.selected_filename = None
+        self.selected_sheets = []
+
         self.setWindowTitle("Generate Spreadsheet")
         self.setGeometry(100, 100, 350, 300)
         self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowContextHelpButtonHint)
@@ -94,7 +95,7 @@ class GenerateSpreadsheetDialog(QtWidgets.QDialog):
             pr = parent.mapToGlobal(pg.topRight())
             self.move(pr.x() - self.width() + 20, pr.y() + 20)
 
-        # reuse your main‐window button style if available
+        # reuse main-window button style if available
         self.button_style = getattr(parent, 'button_style', """
             QPushButton {
                 background-color: rgb(225, 225, 225);
@@ -109,12 +110,137 @@ class GenerateSpreadsheetDialog(QtWidgets.QDialog):
             }
         """)
 
-        # --- Filename input ---
+        # Filename input
         lbl_file = QtWidgets.QLabel("Filename:", self)
         lbl_file.setGeometry(10, 10, 200, 20)
         self.filenameEdit = QtWidgets.QLineEdit(self)
-        self.filenameEdit.setGeometry(10, 35, 330, 20)
+        self.filenameEdit.setGeometry(10, 35, 330, 25)
+        self.filenameEdit.setStyleSheet("""
+            background-color: rgb(255, 255, 255);
+            border: 1px solid black;
+            border-radius: 6px;
+            padding: 2px;
+        """)
         self.filenameEdit.setPlaceholderText("e.g. output.xlsx")
+
+        # Single-sheet entry + Add button
+        lbl_sheet = QtWidgets.QLabel("Sheet Name:", self)
+        lbl_sheet.setGeometry(10, 70, 100, 20)
+        self.sheetNameEdit = QtWidgets.QLineEdit(self)
+        self.sheetNameEdit.setGeometry(110, 70, 150, 25)
+        self.sheetNameEdit.setStyleSheet("""
+            background-color: rgb(255, 255, 255);
+            border: 1px solid black;
+            border-radius: 6px;
+            padding: 2px;
+        """)
+        self.sheetNameEdit.setPlaceholderText("e.g. Sheet1")
+        self.sheetNameEdit.textChanged.connect(self._updateAddState)
+
+        self.addSheetButton = QtWidgets.QPushButton("Add ▶", self)
+        self.addSheetButton.setGeometry(270, 70, 70, 25)
+        self.addSheetButton.setStyleSheet(self.button_style)
+        self.addSheetButton.setEnabled(False)
+        self.addSheetButton.clicked.connect(self.onAddSheet)
+
+        # Live list of added sheets
+        self.sheetsListWidget = QtWidgets.QListWidget(self)
+        self.sheetsListWidget.setGeometry(10, 105, 330, 130)
+        self.sheetsListWidget.setStyleSheet(
+            """
+            QListWidget {
+                background-color: rgb(255, 255, 255);
+                border-style: outset;
+                border-radius: 10px;
+                padding: 4px;
+            }
+
+            QListWidget::item {
+                background-color: rgb(240, 240, 240);
+                padding: 1px;
+                border-radius: 5px;
+            }
+
+            QListWidget::item:hover {
+                background-color: rgb(205, 205, 205);
+            }
+
+            QListWidget::item:selected {
+                background-color: rgb(100, 100, 255);
+                color: white;
+            }
+            """
+        )
+
+        # Action buttons
+        self.createButton = QtWidgets.QPushButton("Create", self)
+        self.createButton.setGeometry(50, 245, 120, 40)
+        self.createButton.setStyleSheet(self.button_style)
+        self.createButton.setEnabled(False)
+        self.createButton.clicked.connect(self.onCreate)
+
+        self.cancelButton = QtWidgets.QPushButton("Cancel", self)
+        self.cancelButton.setGeometry(180, 245, 120, 40)
+        self.cancelButton.setStyleSheet(self.button_style)
+        self.cancelButton.clicked.connect(self.reject)
+
+    def exec_(self):
+        ret = super().exec_()
+        if ret == QtWidgets.QDialog.Accepted:
+            return 1, self.selected_filename, self.selected_sheets
+        else:
+            return 0, None, None
+
+    def _updateAddState(self, text):
+        self.addSheetButton.setEnabled(bool(text.strip()))
+
+    def onAddSheet(self):
+        name = self.sheetNameEdit.text().strip()
+        if not name or name in self.selected_sheets:
+            return
+
+        # keep track
+        self.selected_sheets.append(name)
+        self.createButton.setEnabled(True)
+
+        # build list-item with remove button
+        item = QtWidgets.QListWidgetItem()
+        item.setData(QtCore.Qt.UserRole, name)
+
+        w = QtWidgets.QWidget()
+        layout = QtWidgets.QHBoxLayout(w)
+        lbl = QtWidgets.QLabel(name)
+        btn = QtWidgets.QPushButton("✕")
+        btn.setFixedSize(20, 20)
+        btn.setStyleSheet(self.button_style)
+        btn.clicked.connect(lambda _, itm=item: self.onRemoveSheet(itm))
+        layout.addWidget(lbl)
+        layout.addStretch()
+        layout.addWidget(btn)
+        layout.setContentsMargins(2, 2, 2, 2)
+        w.setLayout(layout)
+
+        item.setSizeHint(w.sizeHint())
+        self.sheetsListWidget.addItem(item)
+        self.sheetsListWidget.setItemWidget(item, w)
+
+        # clear entry
+        self.sheetNameEdit.clear()
+        self.addSheetButton.setEnabled(False)
+
+    def onRemoveSheet(self, item):
+        name = item.data(QtCore.Qt.UserRole)
+        if name in self.selected_sheets:
+            self.selected_sheets.remove(name)
+        row = self.sheetsListWidget.row(item)
+        self.sheetsListWidget.takeItem(row)
+        self.createButton.setEnabled(bool(self.selected_sheets))
+
+    def onCreate(self):
+        self.selected_filename = self.filenameEdit.text().strip()
+        # self.selected_sheets is already up-to-date
+        self.accept()
+
 
 class Ui_MainWindow(object):
     def __init__(self):
@@ -152,6 +278,9 @@ class Ui_MainWindow(object):
         self.GenerateSpreadsheet.setGeometry(20, 50, 271, 61)
         self.GenerateSpreadsheet.setFont(font)
         self.GenerateSpreadsheet.setStyleSheet(self.button_style)
+        self.GenerateSpreadsheet.setToolTip(
+            "Generate a new spreadsheet with your required sheets."
+        )
         self.GenerateSpreadsheet.clicked.connect(self.openSpreadsheetMaker)
 
         # Spreadsheet Checks
@@ -159,6 +288,9 @@ class Ui_MainWindow(object):
         self.SpreadsheetChecks.setGeometry(20, 130, 271, 61)
         self.SpreadsheetChecks.setFont(font)
         self.SpreadsheetChecks.setStyleSheet(self.button_style)
+        self.SpreadsheetChecks.setToolTip(
+            "Check your spreadsheet is god to go before scanning!."
+        )
         self.SpreadsheetChecks.clicked.connect(self.spreadsheetChecks)
 
         # Preliminary QC
@@ -166,6 +298,9 @@ class Ui_MainWindow(object):
         self.PrelimQC.setGeometry(20, 210, 271, 61)
         self.PrelimQC.setFont(font)
         self.PrelimQC.setStyleSheet(self.button_style)
+        self.PrelimQC.setToolTip(
+            "Run before manually QCing."
+        )
         self.PrelimQC.clicked.connect(self.prelimQC)
 
         # Menu Header
@@ -212,6 +347,9 @@ class Ui_MainWindow(object):
 
         self.colorDisplay = QtWidgets.QPushButton(self.colorFrame)
         self.colorDisplay.setGeometry(20, 45, 21, 21)
+        self.colorDisplay.setToolTip(
+            "Select a new color for the error type!."
+        )
         self.colorDisplay.setStyleSheet("background-color: rgb(255, 255, 255)")
         self.colorDisplay.clicked.connect(self.openColorDialog)
 
@@ -227,7 +365,8 @@ class Ui_MainWindow(object):
         self.selectionLine.setFrameShadow(QtWidgets.QFrame.Sunken)
 
         # File input + icons
-        self.fileInput = QtWidgets.QLineEdit("C://", self.centralwidget)
+        self.fileInput = QtWidgets.QLineEdit(self.centralwidget)
+        self.fileInput.setPlaceholderText("Search for spreadsheet...")
         self.fileInput.setGeometry(65, 30, 485, 25)
         self.fileInput.setFont(QtGui.QFont("Arial", 8))
         self.fileInput.setStyleSheet(
@@ -235,7 +374,7 @@ class Ui_MainWindow(object):
             background-color: rgb(255, 255, 255);
             border: 1px solid black;
             border-radius: 6px;
-            padding: 2px;      /* optional: gives a bit of inner space */
+            padding: 2px;
             """
         )
 
@@ -250,6 +389,9 @@ class Ui_MainWindow(object):
         self.settings.setIconSize(QtCore.QSize(22, 22))
         self.settings.move(636, 32)
         self.settings.setStyleSheet("QPushButton { border: none; background: transparent; padding: 0; }")
+        self.settings.setToolTip(
+            "Access the saved settings for the QC program."
+        )
         self.settings.clicked.connect(self.openSettings)
 
         # Search button
@@ -269,6 +411,9 @@ class Ui_MainWindow(object):
                 background-color: rgb(205, 205, 205);
             }
         """)
+        self.Search.setToolTip(
+            "Search for a QC spreadsheet in file finder!"
+        )
         self.Search.clicked.connect(self.updateSearchbar)
 
         MainWindow.setCentralWidget(self.centralwidget)
@@ -300,16 +445,14 @@ class Ui_MainWindow(object):
     def openSpreadsheetMaker(self):
         dialog = GenerateSpreadsheetDialog(self.centralwidget)
         code, filename, sheets = dialog.exec_() # This needs to return 0 if user cancels or 1 if user completes
-        match code:
-            case 0:
-                fileHandler.generateSpreadsheet(filename, sheets)
-                pass
-            case 1:
-                success, path = fileHandler.generateSpreadsheet(filename, sheets)
-                if success:
-                    self.outputBox.setText("** Created Spreadsheet! **")
-                    self.proc_updates()
-                    threading.Thread(target=self._open_excel_file(path), daemon=True).start()
+        if code == 1:
+            success, path = fileHandler.generateSpreadsheet(filename, sheets)
+            if success:
+                self.outputBox.setText("** Created Spreadsheet! **")
+                self.proc_updates()
+                threading.Thread(target=self._open_excel_file(path), daemon=True).start()
+        else:
+            self.outputBox.setText("** Canceled Spreadsheet Creation **")
                 
 
 
